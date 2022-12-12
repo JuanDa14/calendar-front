@@ -6,8 +6,8 @@ import { loginUser } from '../redux';
 
 const LoginPage = () => {
 	const [values, setValues] = useState({
-		email: 'jgamesterror@gmail.com',
-		password: 'moralitos159',
+		email: '',
+		password: '',
 	});
 
 	const { checking } = useSelector((state) => state.auth);
