@@ -1,7 +1,7 @@
 
 # CalendarApp
 
-Aplicacion web inspirado en OpenJira donde podras crear tus propios eventos poder organizarte de una manera facil, ademas tambien podras crear un equipo en el cual podras agregar a los miembros que desees y puedan tener un control centralizado de los eventos que se realizaran.
+Aplicacion web inspirado en OpenJira donde podras crear tus propios eventos poder organizarte de una manera facil, ademas permite crear tu equipo con tus miembros para que puedan saber que actividades se realizaran en las fechas establecidas.
 
 `LINK DEL BACKEND : https://github.com/JuanDa14/calendar-back`
 
