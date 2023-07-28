@@ -21,6 +21,7 @@ export const Modal = ({ children }) => {
 					style={customStyles}
 					closeTimeoutMS={200}
 					role={'dialog'}
+					className={'modal'}
 				>
 					{children}
 				</ReactModal>
@@ -36,6 +37,7 @@ export const Modal = ({ children }) => {
 					style={customStyles}
 					closeTimeoutMS={200}
 					role={'dialog'}
+					className={'modal'}
 				>
 					{children}
 				</ReactModal>
@@ -51,6 +53,7 @@ export const Modal = ({ children }) => {
 					style={customStyles}
 					closeTimeoutMS={200}
 					role={'dialog'}
+					className={'modal'}
 				>
 					{children}
 				</ReactModal>

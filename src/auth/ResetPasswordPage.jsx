@@ -31,45 +31,77 @@ const ResetPassword = () => {
 	};
 
 	return (
-		<div className='w-full h-screen flex items-center mx-auto bg-slate-100'>
-			<div className='w-full p-5'>
-				<div className='max-w-4xl mx-auto text-center rounded-lg p-10 bg-white shadow-lg text-step--1'>
-					<h1 className='font-bold text-step-3 mb-3'>Recupera tu contraseña</h1>
-					<span className=' text-gray-500 text-step-0'>
-						Restaure su contraseña y vuelva a ingresar a su cuenta
-					</span>
-
-					<form className='mt-4' onSubmit={onSubmit}>
-						<input
-							type='password'
-							placeholder='Ingrese su nueva contraseña'
-							name='password'
-							required
-							minLength={6}
-							className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:ring-1 focus:ring-gray-400 mb-2'
-							value={values.password}
-							onChange={(e) => setValues({ ...values, password: e.target.value })}
-						/>
-
-						<input
-							minLength={6}
-							type='password'
-							placeholder='Confirme su nueva contraseña'
-							name='password2'
-							required
-							className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:ring-1 focus:ring-gray-400 mb-2'
-							value={values.password2}
-							onChange={(e) => setValues({ ...values, password2: e.target.value })}
-						/>
-
-						<button
-							disabled={checking}
-							type='submit'
-							className='w-full text-step--1 mt-2 bg-slate-700 rounded-lg py-2 text-white font-semibold hover:bg-slate-600 disabled:bg-slate-400 transition-colors duration-300'
-						>
-							{checking ? 'Cargando...' : 'Restablecer contraseña'}
-						</button>
-					</form>
+		<div className='container h-screen mx-auto'>
+			<div className='flex h-full justify-center items-center px-6'>
+				<div className='w-full xl:w-3/4 lg:w-11/12 flex shadow'>
+					<div
+						className='w-full h-auto bg-gray-400 hidden lg:block lg:w-1/2 bg-cover rounded-l-lg'
+						style={{
+							backgroundImage: `url('https://source.unsplash.com/oWTW-jNGl9I/600x800')`,
+							backgroundPosition: 'center',
+							backgroundSize: 'cover',
+							backgroundRepeat: 'no-repeat',
+						}}
+					></div>
+					<div className='w-full lg:w-1/2 bg-white p-5 rounded-lg lg:rounded-l-none'>
+						<div className='px-8 text-center'>
+							<h3 className='pt-4 mb-2 text-step-2 capitalize font-bold'>
+								Restablecer contraseña
+							</h3>
+							<p className='mb-4 text-sm text-gray-700'>
+								Simplemente ingrese su nueva contraseña y confírmela para restablecerla.
+							</p>
+						</div>
+						<form className='px-8 pt-2 pb-8 mb-4 bg-white rounded' onSubmit={onSubmit}>
+							<div className='mb-4'>
+								<label
+									className='block mb-2 text-sm font-bold text-gray-700'
+									htmlFor='password'
+								>
+									Contraseña
+								</label>
+								<input
+									className='w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow-sm appearance-none focus:outline-none focus:shadow-outline'
+									id='password'
+									type='password'
+									placeholder='************'
+									onChange={(e) => setValues({ ...values, password: e.target.value })}
+									value={values.password}
+									name='password'
+									required
+									minLength={6}
+								/>
+							</div>
+							<div className='mb-4'>
+								<label
+									className='block mb-2 text-sm font-bold text-gray-700'
+									htmlFor='password2'
+								>
+									Confirmar contraseña
+								</label>
+								<input
+									className='w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow-sm appearance-none focus:outline-none focus:shadow-outline'
+									id='password2'
+									type='password'
+									placeholder='************'
+									onChange={(e) => setValues({ ...values, password2: e.target.value })}
+									value={values.password2}
+									name='password2'
+									required
+									minLength={6}
+								/>
+							</div>
+							<div className='mb-6 text-center'>
+								<button
+									disabled={checking}
+									className='w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline'
+									type='submit'
+								>
+									{checking ? 'Cargando...' : 'Restablecer contraseña'}
+								</button>
+							</div>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>

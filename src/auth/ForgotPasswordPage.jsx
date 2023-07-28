@@ -20,47 +20,72 @@ const ForgotPasswordPage = () => {
 	};
 
 	return (
-		<div className='w-full h-screen flex items-center mx-auto bg-slate-100'>
-			<div className='w-full px-5'>
-				<div className='max-w-4xl mx-auto text-center shadow-lg rounded-lg p-10 bg-white text-step--1'>
-					<h1 className='font-bold text-step-3 mb-3 capitalize'>Recupera tu cuenta</h1>
-					<span className='text-step-0 text-gray-500'>
-						Ingresa tu correo electronico y te enviaremos un link para recuperar tu contraseña
-					</span>
-
-					<form className='mt-4' onSubmit={onSubmit}>
-						<label
-							htmlFor='correo'
-							className='text-step-0 text-slate-500 text-start w-full mb-2'
-						>
-							Correo electrónico
-						</label>
-						<input
-							type='email'
-							name='email'
-							id='email'
-							required
-							placeholder='Ingrese su correo electronico'
-							className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:ring-1 focus:ring-gray-400 mb-2'
-							onChange={(e) => setValues({ ...values, email: e.target.value })}
-							value={values.email}
-						/>
-
-						<button
-							disabled={checking}
-							type='submit'
-							className='w-full text-step--1 mt-2 bg-slate-700 rounded-lg py-2 text-white font-semibold hover:bg-slate-600 disabled:bg-slate-400 transition-colors duration-300'
-						>
-							{checking ? 'Enviando...' : 'Recuperar contraseña'}
-						</button>
-					</form>
-					<div className='mt-3'>
-						<p className='text-center text-step-0 text-slate-400 capitalize font-semibold'>
-							¿Ya tienes una cuenta?{' '}
-							<Link to='/auth/login' className='underline hover:text-slate-400'>
-								Inicia sesión
-							</Link>
-						</p>
+		<div className='container h-screen mx-auto'>
+			<div className='flex h-full justify-center items-center px-6'>
+				<div className='w-full xl:w-3/4 lg:w-11/12 flex shadow'>
+					<div
+						className='w-full h-auto bg-gray-400 hidden lg:block lg:w-1/2 bg-cover rounded-l-lg'
+						style={{
+							backgroundImage: `url('https://source.unsplash.com/oWTW-jNGl9I/600x800')`,
+						}}
+					></div>
+					<div className='w-full lg:w-1/2 bg-white p-5 rounded-lg lg:rounded-l-none'>
+						<div className='px-8 text-center'>
+							<h3 className='pt-4 mb-2 text-step-2 capitalize font-bold'>
+								Recupera tu cuenta
+							</h3>
+							<p className='mb-4 text-sm text-gray-700'>
+								Simplemente ingrese su dirección de correo electrónico a continuación y le
+								enviaremos un enlace para restablecer su contraseña!
+							</p>
+						</div>
+						<form className='px-8 pt-2 pb-8 mb-4 bg-white rounded' onSubmit={onSubmit}>
+							<div className='mb-4'>
+								<label
+									className='block mb-2 text-sm font-bold text-gray-700'
+									htmlFor='email'
+								>
+									Correo electrónico
+								</label>
+								<input
+									className='w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow-sm appearance-none focus:outline-none focus:shadow-outline'
+									id='email'
+									type='email'
+									placeholder='Ingresa tu correo electrónico...'
+									onChange={(e) => setValues({ ...values, email: e.target.value })}
+									value={values.email}
+									name='email'
+									required
+								/>
+							</div>
+							<div className='mb-6 text-center'>
+								<button
+									disabled={checking}
+									className='w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline'
+									type='submit'
+								>
+									{checking ? 'Enviando...' : 'Enviar correo electrónico'}
+								</button>
+							</div>
+							<hr className='mb-6 border-t' />
+							<div className='text-center'>
+								<Link
+									to={'/auth/register'}
+									className='inline-block text-sm text-blue-500 align-baseline
+										hover:text-blue-800'
+								>
+									Crear una cuenta
+								</Link>
+							</div>
+							<div className='text-center'>
+								<Link
+									to='/auth/login'
+									className='inline-block text-sm text-blue-500 align-baseline hover:text-blue-800'
+								>
+									¿Ya tienes una cuenta? Inicia sesión!
+								</Link>
+							</div>
+						</form>
 					</div>
 				</div>
 			</div>

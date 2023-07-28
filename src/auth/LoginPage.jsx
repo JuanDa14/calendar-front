@@ -22,67 +22,93 @@ const LoginPage = () => {
 	if (checking) return <Spinner />;
 
 	return (
-		<div className='w-full mx-auto h-screen bg-slate-100'>
-			<div className='container flex h-full items-center justify-center'>
-				<div className='bg-white p-4 w-full max-w-2xl rounded-lg shadow-md'>
-					<h1 className='text-step-3 font-bold uppercase mb-2 text-center'>Bienvenido</h1>
-					<h2 className='text-center text-step-1 text-slate-400 font-semibold'>
-						Comienza a organizarte de una manera rápida
-					</h2>
-					<form className='mt-4' onSubmit={onSubmit}>
-						<div className='flex flex-col mb-2 max-w-lg mx-auto text-gray-500'>
-							<label htmlFor='correo' className='text-step-0 mb-2'>
-								Correo electrónico
-							</label>
-							<input
-								value={values.email}
-								name='email'
-								required
-								id='correo'
-								type='email'
-								className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:ring-1 focus:ring-gray-400 mb-2'
-								placeholder='Ingresa tu correo electronico'
-								onChange={(e) => setValues({ ...values, email: e.target.value })}
-							/>
-						</div>
-						<div className='flex flex-col mb-2 max-w-lg mx-auto'>
-							<label htmlFor='contrasena' className='text-step-0 text-gray-500 mb-2'>
-								Contraseña
-							</label>
-							<input
-								value={values.password}
-								name='password'
-								required
-								id='contrasena'
-								minLength={6}
-								type='password'
-								className='w-full rounded-lg border border-gray-300 p-2 focus:outline-none focus:ring-1 focus:ring-gray-400 mb-2'
-								placeholder='Ingresa tu contraseña'
-								onChange={(e) => setValues({ ...values, password: e.target.value })}
-							/>
-						</div>
-						<div className='mx-auto max-w-lg'>
-							<button
-								type='submit'
-								className='w-full mt-2 text-step--1 bg-slate-700 rounded-lg py-2 text-white font-semibold hover:bg-slate-600 disabled:bg-slate-400 transition-colors duration-300'
-							>
-								Iniciar sesion
-							</button>
-						</div>
-					</form>
-					<div className='mt-3'>
-						<Link to={'/auth/register'}>
-							<p className='text-center text-step-0 text-slate-400 capitalize font-semibold'>
-								¿No tienes una cuenta? <span className='underline'>Registrate</span>
-							</p>
-						</Link>
-					</div>
-					<div className='mt-3'>
-						<Link to={'/auth/forgot-password'}>
-							<p className='text-center text-step-0 text-slate-400 capitalize font-semibold hover:underline'>
-								¿Olvidaste tu Contraseña?
-							</p>
-						</Link>
+		<div className='container h-screen mx-auto'>
+			<div className='flex h-full items-center justify-center px-6'>
+				<div className='w-full xl:w-3/4 lg:w-11/12 flex shadow'>
+					<div
+						className='w-full h-auto bg-gray-400 hidden lg:block lg:w-1/2 bg-cover rounded-l-lg'
+						style={{
+							backgroundImage: `url('https://source.unsplash.com/Mv9hjnEUHR4/600x800')`,
+							backgroundPosition: 'center',
+							backgroundSize: 'cover',
+							backgroundRepeat: 'no-repeat',
+						}}
+					></div>
+					<div className='w-full lg:w-1/2 bg-white p-5 rounded-lg lg:rounded-l-none'>
+						<h3 className='pt-4 text-center capitalize text-step-2 font-bold'>
+							Bienvenido de nuevo!
+						</h3>
+						<form className='px-8 pt-6 pb-8 mb-4 bg-white rounded' onSubmit={onSubmit}>
+							<div className='mb-4'>
+								<label
+									className='block mb-2 text-sm font-bold text-gray-700'
+									htmlFor='username'
+								>
+									Correo electrónico
+								</label>
+								<input
+									className='w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow-sm appearance-none focus:outline-none focus:shadow-outline'
+									id='username'
+									required
+									type='text'
+									placeholder='juandev@gmail.com'
+									onChange={(e) => setValues({ ...values, email: e.target.value })}
+									name='email'
+									value={values.email}
+								/>
+							</div>
+							<div className='mb-2'>
+								<label
+									className='block mb-2 text-sm font-bold text-gray-700'
+									htmlFor='password'
+								>
+									Contraseña
+								</label>
+								<input
+									required
+									className='w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border border-red-500 rounded shadow-sm appearance-none focus:outline-none focus:shadow-outline'
+									id='password'
+									type='password'
+									placeholder='******************'
+									minLength={6}
+									onChange={(e) => setValues({ ...values, password: e.target.value })}
+									name='password'
+									value={values.password}
+								/>
+							</div>
+							<div className='mb-4'>
+								<input className='mr-2 leading-tight' type='checkbox' id='checkbox_id' />
+								<label className='text-sm' htmlFor='checkbox_id'>
+									Recuerdame
+								</label>
+							</div>
+							<div className='mb-6 text-center'>
+								<button
+									className='w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline'
+									type='submit'
+								>
+									Iniciar Sesión
+								</button>
+							</div>
+							<hr className='mb-6 border-t' />
+							<div className='text-center'>
+								<Link
+									to={'/auth/register'}
+									className='inline-block text-sm text-blue-500 align-baseline
+										hover:text-blue-800'
+								>
+									¿No tienes una cuenta? Registrate
+								</Link>
+							</div>
+							<div className='text-center'>
+								<Link
+									to={'/auth/forgot-password'}
+									className='inline-block text-sm text-blue-500 align-baseline hover:text-blue-800'
+								>
+									¿Olvidaste tu Contraseña?
+								</Link>
+							</div>
+						</form>
 					</div>
 				</div>
 			</div>

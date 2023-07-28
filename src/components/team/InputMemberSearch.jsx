@@ -10,7 +10,7 @@ export const InputMemberSearch = () => {
 	const { loading } = useSelector((state) => state.team);
 
 	return (
-		<div className='flex items-center mt-2 mb-2'>
+		<div className='flex items-center mt-4 mb-4'>
 			<div className='relative w-full'>
 				<div className='absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none'>
 					<svg
@@ -29,8 +29,8 @@ export const InputMemberSearch = () => {
 				</div>
 				<input
 					type='search'
-					className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5'
-					placeholder='Buscar miembro por email'
+					className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none block w-full pl-10 p-2.5'
+					placeholder='Buscar miembro'
 					name='search'
 					value={search}
 					onChange={(e) => setSearch(e.target.value)}

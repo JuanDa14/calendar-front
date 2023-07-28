@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { verifiedEmail } from '../redux';
+import { Spinner } from '../components/ui';
 
 const VerifiedPage = () => {
 	const dispatch = useDispatch();
@@ -20,24 +21,43 @@ const VerifiedPage = () => {
 	}, []);
 
 	return (
-		<div className='w-full h-screen flex items-center px-5 md:px-0 bg-slate-100'>
-			<div className='max-w-4xl mx-auto text-center  rounded-lg p-10 bg-white shadow-lg text-step--1'>
-				<h1 className='font-bold text-step-3'>
-					Confirma tu cuenta y comienza a crear {''}
-					<span className='text-slate-500 capitalize block text-step-2'>tus eventos </span>
-				</h1>
-				{verified ? (
-					<span className=' text-step-1 flex flex-col gap-3 mt-4 capitalize text-gray-500'>
-						Cuenta Confirmada, por favor...{'  '}
-						<Link to={'/auth/login'} className='underline capitalize font-semibold block'>
-							Inicia Sesion
-						</Link>
-					</span>
-				) : (
-					<span className=' text-step-1 flex flex-col gap-3 mt-4 capitalize text-gray-500 font-semibold'>
-						Confirmando cuenta...
-					</span>
-				)}
+		<div className='container h-screen mx-auto'>
+			<div className='flex h-full justify-center items-center px-6'>
+				<div className='w-full xl:w-3/4 lg:w-11/12 flex shadow'>
+					<div
+						className='w-full h-auto bg-gray-400 hidden lg:block lg:w-1/2 bg-cover rounded-l-lg'
+						style={{
+							backgroundImage: `url('https://source.unsplash.com/oWTW-jNGl9I/600x800')`,
+							backgroundPosition: 'center',
+							backgroundSize: 'cover',
+							backgroundRepeat: 'no-repeat',
+						}}
+					></div>
+					<div className='w-full lg:w-1/2 bg-white p-5 rounded-lg lg:rounded-l-none'>
+						<div className='px-8 text-center'>
+							<h3 className='pt-4 mb-2 text-step-2 capitalize font-bold'>
+								Confirmar cuenta!
+							</h3>
+							<p className='mb-4 text-step--1 text-gray-700'>
+								Gracias por registrarte! Estamos confirmando tu cuenta, para que puedas
+								iniciar sesión. Por favor, ten paciencia, esto puede tardar unos minutos.
+							</p>
+						</div>
+
+						<div className='flex justify-center items-center mb-4'>
+							{verified ? (
+								<Link
+									to={'/auth/login'}
+									className='w-full text-center px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline'
+								>
+									Iniciar sesión
+								</Link>
+							) : (
+								<Spinner className={'h-full'} />
+							)}
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	);

@@ -1,6 +1,6 @@
-export const Spinner = () => {
+export const Spinner = ({ className }) => {
 	return (
-		<div className='w-full h-screen flex justify-center items-center'>
+		<div className={`w-full h-screen flex justify-center items-center ${className}`}>
 			<div className='text-center'>
 				<div>
 					<svg

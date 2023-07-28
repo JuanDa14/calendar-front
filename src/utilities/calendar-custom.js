@@ -32,12 +32,4 @@ export const localizer = dateFnsLocalizer({
 	locales,
 });
 
-export const eventStyleGetter = (evento, owner) => ({
-	backgroundColor: owner._id === evento.user._id ? '#367CF7' : '#465660',
-	borderRadius: '0px',
-	opacity: 0.8,
-	display: 'block',
-	color: 'white',
-});
-
 export const style = { height: 'calc(100vh - 80px)' };

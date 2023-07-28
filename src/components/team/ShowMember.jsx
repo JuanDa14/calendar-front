@@ -7,13 +7,13 @@ export const ShowMember = () => {
 	return (
 		<>
 			{showMembers.length > 0 && (
-				<div className='flex flex-col mt-2'>
-					<span className='font-semibold text-gray-500 capitalize text-lg'>
+				<div className='flex flex-col'>
+					<span className='font-semibold my-2 capitalize text-step--1 border-b'>
 						Miembro Encontrado
 					</span>
 					{showMembers.map((member) => (
-						<div key={member._id} className='mb-1.5'>
-							<span>{member.name}</span>
+						<div key={member._id} className='mb-1.5 flex justify-between'>
+							<p className='capitalize'>{member.name}</p>
 							<ButtonAddedMember member={member} />
 						</div>
 					))}

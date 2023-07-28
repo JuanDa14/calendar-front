@@ -1,8 +1,11 @@
 export const CalendarEvent = ({ event: { title, user } }) => {
 	return (
-		<div className='flex items-center justify-center gap-1 text-step--1'>
-			<p className='uppercase font-bold'> {title} </p>
-			<span className='capitalize'>- {user} </span>
+		<div className='flex justify-center items-center gap-2'>
+			<p className='capitalize font-semibold text-step--1'>
+				{title}
+				{' - '}
+				<span className='capitalize font-normal'>{user} </span>
+			</p>
 		</div>
 	);
 };
