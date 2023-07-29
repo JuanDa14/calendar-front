@@ -69,7 +69,7 @@ export const CalendarModal = () => {
 										</label>
 										<input
 											type='text'
-											className='px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600'
+											className='px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md  text-gray-600'
 											placeholder='Aprender ...'
 											required
 											minLength={3}
@@ -84,7 +84,7 @@ export const CalendarModal = () => {
 											<div className='relative focus-within:text-gray-600 text-gray-400'>
 												<input
 													type='date'
-													className='pr-4 pl-10 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600'
+													className='pr-4 pl-10 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md text-gray-600'
 													onChange={(e) =>
 														setValues({ ...values, start: e.target.value })
 													}
@@ -115,7 +115,7 @@ export const CalendarModal = () => {
 											<div className='relative focus-within:text-gray-600 text-gray-400'>
 												<input
 													type='date'
-													className='pr-4 pl-10 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600'
+													className='pr-4 pl-10 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md text-gray-600'
 													onChange={(e) =>
 														setValues({ ...values, end: e.target.value })
 													}
@@ -148,7 +148,7 @@ export const CalendarModal = () => {
 										</label>
 										<input
 											type='text'
-											className='px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600'
+											className='px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md text-gray-600'
 											placeholder='Realizar lo antes posible (Urgencia)'
 											name='notes'
 											value={note.notes}
@@ -161,7 +161,7 @@ export const CalendarModal = () => {
 										disabled={loading}
 										onClick={() => dispatch(closeModal())}
 										type='button'
-										className='flex justify-center border items-center w-full text-gray-900 px-3 py-2 rounded-md focus:outline-none hover:bg-slate-100 disabled:opacity-50'
+										className='flex justify-center border items-center w-full text-gray-900 px-3 py-2 rounded-md hover:bg-slate-100 disabled:opacity-50'
 									>
 										<svg
 											className='w-6 h-6 mr-3'
@@ -192,7 +192,7 @@ export const CalendarModal = () => {
 													: loading
 												: loading
 										}
-										className='bg-blue-500 flex justify-center items-center w-full text-white px-3 py-2 rounded-md focus:outline-none hover:bg-blue-800 disabled:bg-blue-300'
+										className='bg-blue-500 flex justify-center items-center w-full text-white px-3 py-2 rounded-md hover:bg-blue-800 disabled:bg-blue-300'
 									>
 										<span>{note._id ? 'Actualizar Evento' : 'Crear Evento'}</span>
 									</button>

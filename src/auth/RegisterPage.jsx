@@ -61,7 +61,7 @@ const RegisterPage = () => {
 										Nombre de usuario
 									</label>
 									<input
-										className='w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow-sm appearance-none focus:outline-none focus:shadow-outline'
+										className='w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow-sm appearance-none focus:shadow-outline'
 										id='usuario'
 										type='text'
 										placeholder='Juandeveloper'
@@ -81,7 +81,7 @@ const RegisterPage = () => {
 									Correo electrónico
 								</label>
 								<input
-									className='w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow-sm appearance-none focus:outline-none focus:shadow-outline'
+									className='w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow-sm appearance-none focus:shadow-outline'
 									id='email'
 									type='email'
 									placeholder='juandev@gmail.com'
@@ -100,7 +100,7 @@ const RegisterPage = () => {
 										Constraseña
 									</label>
 									<input
-										className='w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border border-red-500 rounded shadow-sm appearance-none focus:outline-none focus:shadow-outline'
+										className='w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border border-red-500 rounded shadow-sm appearance-none focus:shadow-outline'
 										id='password'
 										type='password'
 										placeholder='******************'
@@ -119,7 +119,7 @@ const RegisterPage = () => {
 										Confirmar contraseña
 									</label>
 									<input
-										className='w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow-sm appearance-none focus:outline-none focus:shadow-outline'
+										className='w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow-sm appearance-none focus:shadow-outline'
 										id='confirmPassword'
 										type='password'
 										placeholder='******************'
@@ -135,7 +135,7 @@ const RegisterPage = () => {
 							</div>
 							<div className='mb-6 text-center'>
 								<button
-									className='w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline'
+									className='w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:shadow-outline'
 									type='submit'
 								>
 									Registrar cuenta

@@ -61,7 +61,7 @@ const ResetPassword = () => {
 									Contraseña
 								</label>
 								<input
-									className='w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow-sm appearance-none focus:outline-none focus:shadow-outline'
+									className='w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow-sm appearance-none focus:shadow-outline'
 									id='password'
 									type='password'
 									placeholder='************'
@@ -80,7 +80,7 @@ const ResetPassword = () => {
 									Confirmar contraseña
 								</label>
 								<input
-									className='w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow-sm appearance-none focus:outline-none focus:shadow-outline'
+									className='w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow-sm appearance-none focus:shadow-outline'
 									id='password2'
 									type='password'
 									placeholder='************'
@@ -94,7 +94,7 @@ const ResetPassword = () => {
 							<div className='mb-6 text-center'>
 								<button
 									disabled={checking}
-									className='w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline'
+									className='w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:shadow-outline'
 									type='submit'
 								>
 									{checking ? 'Cargando...' : 'Restablecer contraseña'}

@@ -48,7 +48,7 @@ const ForgotPasswordPage = () => {
 									Correo electrónico
 								</label>
 								<input
-									className='w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow-sm appearance-none focus:outline-none focus:shadow-outline'
+									className='w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow-sm appearance-none focus:shadow-outline'
 									id='email'
 									type='email'
 									placeholder='Ingresa tu correo electrónico...'
@@ -61,7 +61,7 @@ const ForgotPasswordPage = () => {
 							<div className='mb-6 text-center'>
 								<button
 									disabled={checking}
-									className='w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline'
+									className='w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:shadow-outline'
 									type='submit'
 								>
 									{checking ? 'Enviando...' : 'Enviar correo electrónico'}

@@ -48,7 +48,7 @@ const VerifiedPage = () => {
 							{verified ? (
 								<Link
 									to={'/auth/login'}
-									className='w-full text-center px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline'
+									className='w-full text-center px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:shadow-outline'
 								>
 									Iniciar sesión
 								</Link>

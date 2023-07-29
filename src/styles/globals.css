@@ -10,6 +10,13 @@
 	-webkit-line-clamp: 1;
 }
 
+button,
+li,
+input,
+a {
+	transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+}
+
 /* Modal */
 .ReactModalPortal > div {
 	opacity: 0;

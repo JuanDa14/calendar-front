@@ -47,7 +47,7 @@ const LoginPage = () => {
 									Correo electrónico
 								</label>
 								<input
-									className='w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow-sm appearance-none focus:outline-none focus:shadow-outline'
+									className='w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow-sm appearance-none focus:shadow-outline'
 									id='username'
 									required
 									type='text'
@@ -66,7 +66,7 @@ const LoginPage = () => {
 								</label>
 								<input
 									required
-									className='w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border border-red-500 rounded shadow-sm appearance-none focus:outline-none focus:shadow-outline'
+									className='w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border border-red-500 rounded shadow-sm appearance-none focus:shadow-outline'
 									id='password'
 									type='password'
 									placeholder='******************'
@@ -84,7 +84,7 @@ const LoginPage = () => {
 							</div>
 							<div className='mb-6 text-center'>
 								<button
-									className='w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline'
+									className='w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:shadow-outline'
 									type='submit'
 								>
 									Iniciar Sesión
