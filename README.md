@@ -7,7 +7,7 @@ Aplicacion web inspirado en OpenJira donde podras crear tus propios eventos pode
 
 ## Capturas
 
-![App Screenshot](https://res.cloudinary.com/dbvyaguam/image/upload/v1670816638/calendarApp_iragok.png)
+![App Screenshot](https://res.cloudinary.com/dbvyaguam/image/upload/v1690580251/calendar_ujtgrh.png)
 
 
 ## 🛠 Skills
