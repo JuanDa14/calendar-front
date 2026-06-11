@@ -31,7 +31,9 @@ export const MemberSearch = () => {
 	);
 
 	const memberIds = new Set(members.map((m) => m._id));
-	const visibleResults = searchResults.filter((user) => !memberIds.has(user._id));
+	const visibleResults = searchResults.filter(
+		(user) => user._id !== uid && !memberIds.has(user._id)
+	);
 
 	const handleAdd = (user) => {
 		if (isExistingTeam && uid === owner._id) {

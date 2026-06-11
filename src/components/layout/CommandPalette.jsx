@@ -19,11 +19,11 @@ import { clearNote } from '@/redux/slices/noteSlice';
 import {
 	openModal,
 	openModalMembers,
-	openModalTeam,
 	setCommandOpen,
 	toggleCommandOpen,
 } from '@/redux/slices/uiSlice';
 import { logoutUser } from '@/redux';
+import { openCreateTeamModal } from '@/redux/thunks/team';
 
 export const CommandPalette = () => {
 	const dispatch = useDispatch();
@@ -72,7 +72,7 @@ export const CommandPalette = () => {
 					<CommandItem
 						onSelect={() =>
 							run(() =>
-								team ? dispatch(openModalMembers()) : dispatch(openModalTeam())
+								team ? dispatch(openModalMembers()) : dispatch(openCreateTeamModal())
 							)
 						}
 					>
@@ -80,7 +80,7 @@ export const CommandPalette = () => {
 						{team ? 'Ver miembros' : 'Crear equipo'}
 					</CommandItem>
 					{team && !isOwner && (
-						<CommandItem onSelect={() => run(() => dispatch(openModalTeam()))}>
+						<CommandItem onSelect={() => run(() => dispatch(openCreateTeamModal()))}>
 							<Users className='size-4' />
 							Crear mi equipo
 						</CommandItem>

@@ -5,12 +5,14 @@ import { ButtonDeleteMember } from '../ui';
 
 export const AddedMember = () => {
 	const { members } = useSelector((state) => state.team);
+	const { uid } = useSelector((state) => state.auth.user);
+	const inviteMembers = members.filter((member) => member._id !== uid);
 
-	if (members.length === 0) return null;
+	if (inviteMembers.length === 0) return null;
 
 	return (
 		<ul className='space-y-2'>
-			{members.map((member) => (
+			{inviteMembers.map((member) => (
 				<li
 					key={member._id}
 					className='flex items-center justify-between gap-3 rounded-lg border bg-muted/30 px-3 py-2.5'

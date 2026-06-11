@@ -29,7 +29,24 @@ import {
 	startSearching,
 } from '../slices/teamSlice';
 
-import { closeModalTeam } from '../slices/uiSlice';
+import { closeModalTeam, openModalTeam } from '../slices/uiSlice';
+
+export const openCreateTeamModal = () => (dispatch, getState) => {
+	const { team } = getState().auth.user;
+
+	dispatch(clearSearchResults());
+	dispatch(clearMembers());
+	dispatch(openModalTeam());
+};
+
+export const closeCreateTeamModal = () => async (dispatch, getState) => {
+	dispatch(closeModalTeam());
+
+	const { team } = getState().auth.user;
+	if (team) {
+		await dispatch(getMembersAndEvents());
+	}
+};
 
 export const createTeam = (values) => async (dispatch, getState) => {
 	dispatch(startLoading());
@@ -37,11 +54,12 @@ export const createTeam = (values) => async (dispatch, getState) => {
 	const { members, owner } = getState().team;
 	const { user } = getState().auth;
 	const isMemberOfAnotherTeam = Boolean(user.team) && owner?._id !== user.uid;
+	const inviteMembers = members.filter((member) => member._id !== user.uid);
 
 	const body = {
 		name: values.name,
 		description: values.description,
-		members,
+		members: inviteMembers,
 	};
 
 	const options = {
@@ -72,7 +90,7 @@ export const createTeam = (values) => async (dispatch, getState) => {
 				})
 			);
 			await dispatch(getMembersAndEvents());
-			dispatch(closeModalTeam());
+			dispatch(closeCreateTeamModal());
 			dispatch(finishLoading());
 			showSuccessMessage('Equipo creado correctamente');
 		}
@@ -108,6 +126,12 @@ export const searchMembers = (query) => async (dispatch) => {
 
 export const addedMember = (member) => (dispatch, getState) => {
 	const { members } = getState().team;
+	const { uid } = getState().auth.user;
+
+	if (member._id === uid) {
+		showErrorMessage('No puedes agregarte a ti mismo');
+		return;
+	}
 
 	if (members.find((m) => m._id === member._id)) {
 		showErrorMessage('El usuario ya se encuentra en el equipo');

@@ -9,8 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { ModalSection, ModalShell } from '@/components/ui/modal-shell';
 import { Separator } from '@/components/ui/separator';
-import { createTeam } from '@/redux/thunks/team';
-import { closeModalTeam } from '@/redux/slices/uiSlice';
+import { closeCreateTeamModal, createTeam } from '@/redux/thunks/team';
 import { AddedMember } from './AddedMember';
 import { MemberSearch } from './MemberSearch';
 
@@ -21,6 +20,7 @@ export const TeamModal = () => {
 	const { members, loading, owner } = useSelector((state) => state.team);
 	const { team, uid } = useSelector((state) => state.auth.user);
 	const isMemberOfAnotherTeam = Boolean(team) && owner?._id !== uid;
+	const inviteMembers = members.filter((member) => member._id !== uid);
 	const [values, setValues] = useState(initialState);
 
 	const onSubmit = (e) => {
@@ -40,14 +40,14 @@ export const TeamModal = () => {
 				}
 				footer={
 					<>
-						<Button type='button' variant='outline' onClick={() => dispatch(closeModalTeam())}>
+						<Button type='button' variant='outline' onClick={() => dispatch(closeCreateTeamModal())}>
 							<X className='size-4' />
 							Cancelar
 						</Button>
 						<Button
 							type='submit'
 							form='create-team-form'
-							disabled={loading || members.length === 0 || values.name.length < 3}
+							disabled={loading || inviteMembers.length === 0 || values.name.length < 3}
 						>
 							<Check className='size-4' />
 							{loading ? 'Creando...' : 'Crear equipo'}
@@ -95,9 +95,9 @@ export const TeamModal = () => {
 						<MemberSearch />
 					</ModalSection>
 
-					{members.length > 0 && (
+					{inviteMembers.length > 0 && (
 						<ModalSection
-							title={`Miembros seleccionados (${members.length})`}
+							title={`Miembros seleccionados (${inviteMembers.length})`}
 							description='Estos usuarios se agregarán al crear el equipo'
 						>
 							<AddedMember />

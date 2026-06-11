@@ -22,7 +22,8 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { openModal, openModalMembers, openModalTeam } from '@/redux/slices/uiSlice';
+import { openModal, openModalMembers } from '@/redux/slices/uiSlice';
+import { openCreateTeamModal } from '@/redux/thunks/team';
 import { clearNote } from '@/redux/slices/noteSlice';
 import { logoutUser } from '@/redux';
 
@@ -42,7 +43,7 @@ export const Navbar = () => {
 		if (members.length > 0) {
 			dispatch(openModalMembers());
 		} else {
-			dispatch(openModalTeam());
+			dispatch(openCreateTeamModal());
 		}
 	};
 

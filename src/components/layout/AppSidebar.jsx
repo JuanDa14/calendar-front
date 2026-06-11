@@ -14,13 +14,10 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ThemeToggle } from '@/components/theme-toggle';
-import {
-	openModalMembers,
-	openModalTeam,
-	setCommandOpen,
-} from '@/redux/slices/uiSlice';
+import { openModalMembers, setCommandOpen } from '@/redux/slices/uiSlice';
 import { UserAvatar } from '@/components/ui/user-avatar';
 import { logoutUser } from '@/redux';
+import { openCreateTeamModal } from '@/redux/thunks/team';
 
 export const AppSidebar = ({ open, onClose }) => {
 	const dispatch = useDispatch();
@@ -34,13 +31,13 @@ export const AppSidebar = ({ open, onClose }) => {
 		if (hasTeam) {
 			dispatch(openModalMembers());
 		} else {
-			dispatch(openModalTeam());
+			dispatch(openCreateTeamModal());
 		}
 		onClose?.();
 	};
 
 	const handleCreateOwnTeam = () => {
-		dispatch(openModalTeam());
+		dispatch(openCreateTeamModal());
 		onClose?.();
 	};
 
