@@ -1,6 +1,8 @@
 import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
+import { AppShell } from '@/components/layout/AppShell';
+
 const PublicRouter = lazy(() => import('../routes/PublicRouter'));
 const PrivateRouter = lazy(() => import('../routes/PrivateRouter'));
 
@@ -13,46 +15,51 @@ const CalendarPage = lazy(() => import('../pages/CalendarPage'));
 
 export const router = createBrowserRouter([
 	{
-		path: 'auth',
-		element: <PublicRouter />,
+		element: <AppShell />,
 		children: [
 			{
-				path: 'login',
-				element: <LoginPage />,
+				path: 'auth',
+				element: <PublicRouter />,
+				children: [
+					{
+						path: 'login',
+						element: <LoginPage />,
+					},
+					{
+						path: 'register',
+						element: <RegisterPage />,
+					},
+					{
+						path: 'verified',
+						element: <VerifiedPage />,
+					},
+					{
+						path: 'forgot-password',
+						element: <ForgotPasswordPage />,
+					},
+					{
+						path: 'reset-password',
+						element: <ResetPasswordPage />,
+					},
+					{
+						path: '*',
+						element: <LoginPage />,
+					},
+				],
 			},
 			{
-				path: 'register',
-				element: <RegisterPage />,
-			},
-			{
-				path: 'verified',
-				element: <VerifiedPage />,
-			},
-			{
-				path: 'forgot-password',
-				element: <ForgotPasswordPage />,
-			},
-			{
-				path: 'reset-password',
-				element: <ResetPasswordPage />,
-			},
-			{
-				path: '*',
-				element: <LoginPage />,
-			},
-		],
-	},
-	{
-		path: '/',
-		element: <PrivateRouter />,
-		children: [
-			{
-				index: true,
-				element: <CalendarPage />,
-			},
-			{
-				path: '*',
-				element: <CalendarPage />,
+				path: '/',
+				element: <PrivateRouter />,
+				children: [
+					{
+						index: true,
+						element: <CalendarPage />,
+					},
+					{
+						path: '*',
+						element: <CalendarPage />,
+					},
+				],
 			},
 		],
 	},
