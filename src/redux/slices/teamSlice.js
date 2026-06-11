@@ -6,7 +6,8 @@ const initialState = {
 	members: [],
 	description: '',
 	loading: false,
-	showMembers: [],
+	searching: false,
+	searchResults: [],
 };
 
 export const teamSlice = createSlice({
@@ -19,6 +20,14 @@ export const teamSlice = createSlice({
 
 		finishLoading: (state) => {
 			state.loading = false;
+		},
+
+		startSearching: (state) => {
+			state.searching = true;
+		},
+
+		finishSearching: (state) => {
+			state.searching = false;
 		},
 
 		addMember: (state, action) => {
@@ -36,12 +45,12 @@ export const teamSlice = createSlice({
 			state.description = action.payload;
 		},
 
-		setMember: (state, action) => {
-			state.showMembers.push(action.payload);
+		setSearchResults: (state, action) => {
+			state.searchResults = action.payload;
 		},
 
-		clearShowMembers: (state) => {
-			state.showMembers = [];
+		clearSearchResults: (state) => {
+			state.searchResults = [];
 		},
 
 		clearMembers: (state) => {
@@ -57,7 +66,7 @@ export const teamSlice = createSlice({
 			state.owner = {};
 			state.members = [];
 			state.description = '';
-			state.showMembers = [];
+			state.searchResults = [];
 		},
 	},
 });
@@ -65,14 +74,16 @@ export const teamSlice = createSlice({
 export const {
 	startLoading,
 	finishLoading,
+	startSearching,
+	finishSearching,
 	addMember,
-	setMember,
 	clearMembers,
 	removeMember,
 	setOwnerAndMembers,
 	setTeamDescription,
+	setSearchResults,
+	clearSearchResults,
 	resetTeam,
-	clearShowMembers,
 } = teamSlice.actions;
 
 export default teamSlice.reducer;

@@ -1,22 +1,30 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Loader2, Save, Settings2, UserMinus, UserPlus, Users, X } from 'lucide-react';
+import {
+	Loader2,
+	Save,
+	Settings2,
+	Trash2,
+	User,
+	UserMinus,
+	Users,
+	X,
+} from 'lucide-react';
 
 import { Modal } from '@/components/ui';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { ModalSection, ModalShell } from '@/components/ui/modal-shell';
+import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { clearShowMembers } from '@/redux/slices/teamSlice';
 import { closeModalMembers } from '@/redux/slices/uiSlice';
 import { deleteMember, deleteTeam, updateTeam } from '@/redux/thunks/team';
-import { InputMemberSearch } from './InputMemberSearch';
-import { ShowMember } from './ShowMember';
+import { MemberSearch } from './MemberSearch';
 
 export const MembersModal = () => {
 	const dispatch = useDispatch();
-	const [addedMember, setAddedMember] = useState(false);
 	const [editValues, setEditValues] = useState({ name: '', description: '' });
 	const { members, owner, loading, description } = useSelector((state) => state.team);
 	const { teamModalTab } = useSelector((state) => state.ui);
@@ -39,28 +47,20 @@ export const MembersModal = () => {
 
 	return (
 		<Modal>
-			<div className='w-full p-6'>
-				<div className='mb-4 flex items-start gap-4'>
-					<div className='flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary'>
-						<Users className='size-6' />
-					</div>
-					<div className='min-w-0 flex-1'>
-						<h2 className='truncate text-xl font-semibold capitalize'>{team}</h2>
-						<p className='text-sm text-muted-foreground'>
-							Owner: <span className='capitalize'>{owner.name}</span>
-						</p>
-					</div>
-				</div>
-
+			<ModalShell
+				icon={Users}
+				title={team}
+				description={`Propietario: ${owner.name || '—'}`}
+			>
 				{isOwner && (
-					<div className='mb-4 flex rounded-lg border p-1'>
+					<div className='flex rounded-lg border p-1'>
 						<button
 							type='button'
 							className={cn(
-								'flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-1.5 text-sm transition-colors',
+								'flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors',
 								activeTab === 'members'
 									? 'bg-primary text-primary-foreground'
-									: 'text-muted-foreground hover:text-foreground'
+									: 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
 							)}
 							onClick={() => setActiveTab('members')}
 						>
@@ -70,10 +70,10 @@ export const MembersModal = () => {
 						<button
 							type='button'
 							className={cn(
-								'flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-1.5 text-sm transition-colors',
+								'flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors',
 								activeTab === 'settings'
 									? 'bg-primary text-primary-foreground'
-									: 'text-muted-foreground hover:text-foreground'
+									: 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
 							)}
 							onClick={() => setActiveTab('settings')}
 						>
@@ -84,120 +84,118 @@ export const MembersModal = () => {
 				)}
 
 				{activeTab === 'settings' && isOwner ? (
-					<form onSubmit={handleUpdateTeam} className='space-y-4'>
-						<div className='space-y-2'>
-							<Label htmlFor='edit-team-name'>Nombre del equipo</Label>
-							<Input
-								id='edit-team-name'
-								value={editValues.name}
-								onChange={(e) =>
-									setEditValues({ ...editValues, name: e.target.value })
-								}
-								required
-								minLength={3}
-								className='w-full'
-							/>
-						</div>
-						<div className='space-y-2'>
-							<Label htmlFor='edit-team-description'>Descripción</Label>
-							<Textarea
-								id='edit-team-description'
-								value={editValues.description}
-								onChange={(e) =>
-									setEditValues({ ...editValues, description: e.target.value })
-								}
-								rows={3}
-								className='w-full resize-none'
-								placeholder='Describe tu equipo...'
-							/>
-						</div>
-						<div className='flex gap-3'>
+					<form onSubmit={handleUpdateTeam} className='space-y-5'>
+						<ModalSection title='Datos del equipo'>
+							<div className='space-y-4'>
+								<div className='space-y-2'>
+									<Label htmlFor='edit-team-name'>Nombre</Label>
+									<Input
+										id='edit-team-name'
+										value={editValues.name}
+										onChange={(e) =>
+											setEditValues({ ...editValues, name: e.target.value })
+										}
+										required
+										minLength={3}
+										className='w-full'
+									/>
+								</div>
+								<div className='space-y-2'>
+									<Label htmlFor='edit-team-description'>Descripción</Label>
+									<Textarea
+										id='edit-team-description'
+										value={editValues.description}
+										onChange={(e) =>
+											setEditValues({
+												...editValues,
+												description: e.target.value,
+											})
+										}
+										rows={3}
+										className='w-full resize-none'
+										placeholder='Describe tu equipo...'
+									/>
+								</div>
+							</div>
+						</ModalSection>
+
+						<div className='flex flex-col-reverse gap-2 sm:flex-row sm:justify-between'>
 							<Button
 								type='button'
-								variant='outline'
-								className='flex-1'
-								onClick={() => dispatch(closeModalMembers())}
+								variant='destructive'
+								disabled={loading}
+								onClick={async () => {
+									await dispatch(deleteTeam());
+									dispatch(closeModalMembers());
+								}}
 							>
-								Cancelar
+								<Trash2 className='size-4' />
+								Eliminar equipo
 							</Button>
-							<Button type='submit' className='flex-1' disabled={loading}>
-								{loading ? (
-									<Loader2 className='size-4 animate-spin' />
-								) : (
-									<Save className='size-4' />
-								)}
-								Guardar
-							</Button>
+							<div className='flex flex-col-reverse gap-2 sm:flex-row'>
+								<Button
+									type='button'
+									variant='outline'
+									onClick={() => dispatch(closeModalMembers())}
+								>
+									Cancelar
+								</Button>
+								<Button type='submit' disabled={loading}>
+									{loading ? (
+										<Loader2 className='size-4 animate-spin' />
+									) : (
+										<Save className='size-4' />
+									)}
+									Guardar cambios
+								</Button>
+							</div>
 						</div>
-						<Button
-							type='button'
-							variant='destructive'
-							className='w-full'
-							disabled={loading}
-							onClick={async () => {
-								await dispatch(deleteTeam());
-								dispatch(closeModalMembers());
-							}}
-						>
-							Eliminar equipo
-						</Button>
 					</form>
 				) : (
-					<>
+					<div className='space-y-5'>
 						{isOwner && (
-							<div className='mb-4 flex flex-wrap gap-2'>
-								{!addedMember ? (
-									<Button
-										size='sm'
-										disabled={loading}
-										onClick={() => setAddedMember(true)}
-									>
-										<UserPlus className='size-4' />
-										Agregar miembro
-									</Button>
-								) : (
-									<Button
-										variant='outline'
-										size='sm'
-										disabled={loading}
-										onClick={() => {
-											dispatch(clearShowMembers());
-											setAddedMember(false);
-										}}
-									>
-										Cancelar
-									</Button>
-								)}
-							</div>
+							<ModalSection
+								title='Agregar miembros'
+								description='Busca por nombre o email. Los resultados aparecen en tiempo real.'
+							>
+								<MemberSearch />
+							</ModalSection>
 						)}
 
-						{addedMember && (
-							<div className='mb-4'>
-								<InputMemberSearch />
-							</div>
-						)}
+						{isOwner && <Separator />}
 
-						<ShowMember />
-
-						<div className='mt-4 space-y-2'>
-							<p className='text-sm font-medium text-muted-foreground'>
-								Miembros del equipo
-							</p>
+						<ModalSection
+							title={`Miembros (${members.length})`}
+							description='Personas que forman parte de este equipo'
+						>
 							{members.length === 0 ? (
-								<p className='rounded-lg border border-dashed p-4 text-center text-sm text-muted-foreground'>
-									No hay miembros en el equipo
-								</p>
+								<div className='rounded-lg border border-dashed px-4 py-8 text-center'>
+									<p className='text-sm text-muted-foreground'>
+										Aún no hay miembros en el equipo
+									</p>
+								</div>
 							) : (
 								<ul className='space-y-2'>
-									{members.map((member, index) => (
+									{members.map((member) => (
 										<li
 											key={member._id}
-											className='flex items-center justify-between rounded-lg border bg-muted/30 px-3 py-2'
+											className='flex items-center justify-between gap-3 rounded-lg border bg-muted/30 px-3 py-2.5'
 										>
-											<span className='text-sm'>
-												<span className='font-medium'>{index + 1}.</span>{' '}
-												<span className='capitalize'>{member.name}</span>
-											</span>
+											<div className='flex min-w-0 items-center gap-2.5'>
+												<div className='flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary'>
+													<User className='size-4' />
+												</div>
+												<div className='min-w-0'>
+													<p className='truncate text-sm font-medium capitalize'>
+														{member.name}
+													</p>
+													{member.email && (
+														<p className='truncate text-xs text-muted-foreground'>
+															{member.email}
+														</p>
+													)}
+												</div>
+											</div>
 											{isOwner && (
 												<Button
 													variant='ghost'
@@ -205,29 +203,26 @@ export const MembersModal = () => {
 													disabled={loading}
 													onClick={() => dispatch(deleteMember(member))}
 													aria-label={`Eliminar ${member.name}`}
+													className='shrink-0 text-destructive hover:text-destructive'
 												>
-													<UserMinus className='size-4 text-destructive' />
+													<UserMinus className='size-4' />
 												</Button>
 											)}
 										</li>
 									))}
 								</ul>
 							)}
-						</div>
+						</ModalSection>
 
-						<div className='mt-6'>
-							<Button
-								variant='outline'
-								className='w-full'
-								onClick={() => dispatch(closeModalMembers())}
-							>
+						<div className='flex justify-end'>
+							<Button variant='outline' onClick={() => dispatch(closeModalMembers())}>
 								<X className='size-4' />
 								Cerrar
 							</Button>
 						</div>
-					</>
+					</div>
 				)}
-			</div>
+			</ModalShell>
 		</Modal>
 	);
 };

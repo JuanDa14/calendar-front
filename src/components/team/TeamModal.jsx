@@ -1,20 +1,24 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Users, X, Check } from 'lucide-react';
+import { Check, Users, X } from 'lucide-react';
 
 import { Modal } from '@/components/ui';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { ModalSection, ModalShell } from '@/components/ui/modal-shell';
+import { Separator } from '@/components/ui/separator';
 import { createTeam } from '@/redux/thunks/team';
 import { closeModalTeam } from '@/redux/slices/uiSlice';
-import { AddedMember, InputMemberSearch, ShowMember } from './index';
+import { AddedMember } from './AddedMember';
+import { MemberSearch } from './MemberSearch';
 
-const initialState = { name: '', description: '', member: '' };
+const initialState = { name: '', description: '' };
 
 export const TeamModal = () => {
 	const dispatch = useDispatch();
-	const { members, loading, showMembers } = useSelector((state) => state.team);
+	const { members, loading } = useSelector((state) => state.team);
 	const [values, setValues] = useState(initialState);
 
 	const onSubmit = (e) => {
@@ -24,77 +28,77 @@ export const TeamModal = () => {
 
 	return (
 		<Modal>
-			<div className='w-full p-6'>
-				<div className='mb-6 flex items-start gap-4'>
-					<div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary'>
-						<Users className='h-6 w-6' />
-					</div>
-					<div>
-						<h2 className='text-xl font-semibold'>Nuevo equipo</h2>
-						<p className='text-sm text-muted-foreground'>
-							Completa el formulario para crear tu equipo
-						</p>
-					</div>
-				</div>
-
-				<form onSubmit={onSubmit} className='space-y-4'>
-					<div className='space-y-2'>
-						<Label htmlFor='team-name'>Nombre del grupo</Label>
-						<Input
-							id='team-name'
-							placeholder='Developers...'
-							required
-							minLength={6}
-							value={values.name}
-							onChange={(e) => setValues({ ...values, name: e.target.value })}
-						/>
-					</div>
-
-					<div className='space-y-2'>
-						<Label htmlFor='team-description'>Descripción</Label>
-						<Input
-							id='team-description'
-							placeholder='Equipo de desarrolladores...'
-							value={values.description}
-							onChange={(e) => setValues({ ...values, description: e.target.value })}
-						/>
-					</div>
-
-					<div className='space-y-2'>
-						<Label>Buscar miembro</Label>
-						<InputMemberSearch />
-					</div>
-
-					{showMembers.length > 0 && <ShowMember />}
-
-					{members.length > 0 && (
-						<div className='space-y-2'>
-							<Label>Miembros agregados</Label>
-							<AddedMember />
-						</div>
-					)}
-
-					<div className='flex gap-3 pt-2'>
-						<Button
-							type='button'
-							variant='outline'
-							className='flex-1'
-							onClick={() => dispatch(closeModalTeam())}
-						>
-							<X className='h-4 w-4' />
-							Cerrar
+			<ModalShell
+				icon={Users}
+				title='Crear equipo'
+				description='Configura tu equipo e invita miembros antes de publicarlo'
+				footer={
+					<>
+						<Button type='button' variant='outline' onClick={() => dispatch(closeModalTeam())}>
+							<X className='size-4' />
+							Cancelar
 						</Button>
 						<Button
 							type='submit'
-							className='flex-1'
-							disabled={loading || members.length === 0}
+							form='create-team-form'
+							disabled={loading || members.length === 0 || values.name.length < 3}
 						>
-							<Check className='h-4 w-4' />
-							{loading ? 'Creando...' : 'Crear grupo'}
+							<Check className='size-4' />
+							{loading ? 'Creando...' : 'Crear equipo'}
 						</Button>
-					</div>
+					</>
+				}
+			>
+				<form id='create-team-form' onSubmit={onSubmit} className='space-y-5'>
+					<ModalSection title='Información del equipo'>
+						<div className='space-y-4'>
+							<div className='space-y-2'>
+								<Label htmlFor='team-name'>Nombre</Label>
+								<Input
+									id='team-name'
+									placeholder='Equipo de desarrollo'
+									required
+									minLength={3}
+									className='w-full'
+									value={values.name}
+									onChange={(e) => setValues({ ...values, name: e.target.value })}
+								/>
+							</div>
+							<div className='space-y-2'>
+								<Label htmlFor='team-description'>Descripción</Label>
+								<Textarea
+									id='team-description'
+									placeholder='¿Para qué es este equipo?'
+									rows={2}
+									className='w-full resize-none'
+									value={values.description}
+									onChange={(e) =>
+										setValues({ ...values, description: e.target.value })
+									}
+								/>
+							</div>
+						</div>
+					</ModalSection>
+
+					<Separator />
+
+					<ModalSection
+						title='Invitar miembros'
+						description='Busca usuarios por nombre o email. Los resultados se filtran mientras escribes.'
+					>
+						<MemberSearch />
+					</ModalSection>
+
+					{members.length > 0 && (
+						<ModalSection
+							title={`Miembros seleccionados (${members.length})`}
+							description='Estos usuarios se agregarán al crear el equipo'
+						>
+							<AddedMember />
+						</ModalSection>
+					)}
 				</form>
-			</div>
+			</ModalShell>
 		</Modal>
 	);
 };

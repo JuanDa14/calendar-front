@@ -17,14 +17,16 @@ import { clearTeam, setNameTeam } from '../slices/authSlice';
 import { addAllNotes, clearNote, clearNotes, deleteNotesByMemberId } from '../slices/noteSlice';
 import {
 	addMember,
-	clearShowMembers,
+	clearSearchResults,
 	finishLoading,
+	finishSearching,
 	removeMember,
 	resetTeam,
-	setMember,
 	setOwnerAndMembers,
+	setSearchResults,
 	setTeamDescription,
 	startLoading,
+	startSearching,
 } from '../slices/teamSlice';
 
 import { closeModalTeam } from '../slices/uiSlice';
@@ -73,21 +75,30 @@ export const createTeam = (values) => async (dispatch, getState) => {
 	dispatch(finishLoading());
 };
 
-export const searchMember = (email) => async (dispatch) => {
-	dispatch(startLoading());
+export const searchMembers = (query) => async (dispatch) => {
+	const trimmed = query?.trim();
+
+	if (!trimmed || trimmed.length < 2) {
+		dispatch(clearSearchResults());
+		return;
+	}
+
+	dispatch(startSearching());
 
 	const options = {
 		endpoint: '/search/member',
-		body: { email },
+		body: { query: trimmed },
 	};
 
 	const data = await postTeamService(options);
 
 	if (data.ok) {
-		dispatch(setMember(data.usuario));
+		dispatch(setSearchResults(data.usuarios || []));
+	} else {
+		dispatch(clearSearchResults());
 	}
 
-	dispatch(finishLoading());
+	dispatch(finishSearching());
 };
 
 export const addedMember = (member) => (dispatch, getState) => {
@@ -99,7 +110,7 @@ export const addedMember = (member) => (dispatch, getState) => {
 		dispatch(addMember(member));
 	}
 
-	dispatch(clearShowMembers());
+	dispatch(clearSearchResults());
 };
 
 export const saveAddedMember = (values) => async (dispatch, getState) => {

@@ -17,7 +17,8 @@ import {
 	FormLabel,
 	FormMessage,
 } from '@/components/ui/form';
-import { DialogDescription, DialogTitle } from '@/components/ui/dialog';
+import { ModalSection, ModalShell } from '@/components/ui/modal-shell';
+import { Separator } from '@/components/ui/separator';
 import { eventSchema } from '@/lib/validations/auth';
 import { useEventPermissions } from '@/hooks/useEventPermissions';
 import { createNote, deleteNote, updateNote } from '@/redux';
@@ -63,134 +64,140 @@ export const CalendarModal = () => {
 
 	return (
 		<Modal>
-			<div className='w-full p-6'>
-				<div className='mb-6 flex items-start gap-4 pr-8'>
-					<div className='flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary'>
-						<CalendarPlus className='size-6' aria-hidden='true' />
-					</div>
-					<div className='min-w-0 flex-1 space-y-1'>
-						<DialogTitle>{note._id ? 'Actualizar evento' : 'Nuevo evento'}</DialogTitle>
-						<DialogDescription>
-							{note._id
-								? 'Modifica los datos del evento seleccionado'
-								: 'Completa la información para crear un nuevo evento'}
-						</DialogDescription>
-					</div>
-				</div>
-
+			<ModalShell
+				icon={CalendarPlus}
+				title={note._id ? 'Editar evento' : 'Nuevo evento'}
+				description={
+					note._id
+						? 'Actualiza la información del evento seleccionado'
+						: 'Completa los campos para programar un nuevo evento'
+				}
+				footer={
+					<>
+						{note._id && canDelete && (
+							<Button
+								type='button'
+								variant='destructive'
+								disabled={loading}
+								onClick={() => dispatch(deleteNote(note._id))}
+								className='mr-auto w-full sm:w-auto'
+							>
+								<Trash2 className='size-4' />
+								Eliminar
+							</Button>
+						)}
+						<Button
+							type='button'
+							variant='outline'
+							disabled={loading}
+							onClick={() => dispatch(closeModal())}
+						>
+							<X className='size-4' />
+							Cancelar
+						</Button>
+						<Button
+							type='submit'
+							form='event-form'
+							disabled={isDisabled}
+						>
+							{loading && <Loader2 className='size-4 animate-spin' />}
+							{note._id ? 'Guardar cambios' : 'Crear evento'}
+						</Button>
+					</>
+				}
+			>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className='w-full space-y-4'>
-						<FormField
-							control={form.control}
-							name='title'
-							render={({ field }) => (
-								<FormItem className='w-full'>
-									<FormLabel>Título</FormLabel>
-									<FormControl>
-										<Input
-											placeholder='Reunión de equipo...'
-											className='w-full'
-											disabled={isDisabled}
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-
-						<div className='grid w-full gap-4 sm:grid-cols-2'>
+					<form id='event-form' onSubmit={form.handleSubmit(onSubmit)} className='space-y-5'>
+						<ModalSection title='Detalles'>
 							<FormField
 								control={form.control}
-								name='start'
+								name='title'
 								render={({ field }) => (
 									<FormItem className='w-full'>
-										<FormLabel>Inicio</FormLabel>
+										<FormLabel>Título</FormLabel>
 										<FormControl>
-											<DatePicker
-												value={field.value}
-												onChange={field.onChange}
+											<Input
+												placeholder='Reunión de equipo, entrega, etc.'
+												className='w-full'
 												disabled={isDisabled}
-												placeholder='Fecha de inicio'
+												{...field}
 											/>
 										</FormControl>
 										<FormMessage />
 									</FormItem>
 								)}
 							/>
-							<FormField
-								control={form.control}
-								name='end'
-								render={({ field }) => (
-									<FormItem className='w-full'>
-										<FormLabel>Fin</FormLabel>
-										<FormControl>
-											<DatePicker
-												value={field.value}
-												onChange={field.onChange}
-												disabled={isDisabled}
-												placeholder='Fecha de fin'
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-						</div>
+						</ModalSection>
 
-						<FormField
-							control={form.control}
-							name='notes'
-							render={({ field }) => (
-								<FormItem className='w-full'>
-									<FormLabel>Descripción</FormLabel>
-									<FormControl>
-										<Textarea
-											placeholder='Detalles adicionales...'
-											className='w-full resize-none'
-											rows={3}
-											disabled={isDisabled}
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+						<Separator />
 
-						<div className='flex flex-col gap-3 pt-2'>
-							<div className='flex gap-3'>
-								<Button
-									type='button'
-									variant='outline'
-									className='flex-1'
-									disabled={loading}
-									onClick={() => dispatch(closeModal())}
-								>
-									<X className='size-4' />
-									Cancelar
-								</Button>
-								<Button type='submit' className='flex-1' disabled={isDisabled}>
-									{loading && <Loader2 className='size-4 animate-spin' />}
-									{note._id ? 'Actualizar' : 'Crear'}
-								</Button>
+						<ModalSection title='Fechas'>
+							<div className='grid w-full gap-4 sm:grid-cols-2'>
+								<FormField
+									control={form.control}
+									name='start'
+									render={({ field }) => (
+										<FormItem className='w-full'>
+											<FormLabel>Inicio</FormLabel>
+											<FormControl>
+												<DatePicker
+													value={field.value}
+													onChange={field.onChange}
+													disabled={isDisabled}
+													placeholder='Fecha de inicio'
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name='end'
+									render={({ field }) => (
+										<FormItem className='w-full'>
+											<FormLabel>Fin</FormLabel>
+											<FormControl>
+												<DatePicker
+													value={field.value}
+													onChange={field.onChange}
+													disabled={isDisabled}
+													placeholder='Fecha de fin'
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
 							</div>
-							{note._id && canDelete && (
-								<Button
-									type='button'
-									variant='destructive'
-									className='w-full'
-									disabled={loading}
-									onClick={() => dispatch(deleteNote(note._id))}
-								>
-									<Trash2 className='size-4' />
-									Eliminar evento
-								</Button>
-							)}
-						</div>
+						</ModalSection>
+
+						<Separator />
+
+						<ModalSection title='Notas adicionales'>
+							<FormField
+								control={form.control}
+								name='notes'
+								render={({ field }) => (
+									<FormItem className='w-full'>
+										<FormLabel>Descripción</FormLabel>
+										<FormControl>
+											<Textarea
+												placeholder='Ubicación, agenda, participantes...'
+												className='w-full resize-none'
+												rows={3}
+												disabled={isDisabled}
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</ModalSection>
 					</form>
 				</Form>
-			</div>
+			</ModalShell>
 		</Modal>
 	);
 };
