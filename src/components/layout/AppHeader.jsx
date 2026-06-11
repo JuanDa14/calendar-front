@@ -1,4 +1,5 @@
 import { useDispatch } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { CalendarPlus, Menu, Search } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -7,12 +8,20 @@ import { getSearchShortcut } from '@/lib/keyboard';
 import { clearNote } from '@/redux/slices/noteSlice';
 import { openModal, setCommandOpen } from '@/redux/slices/uiSlice';
 
-export const AppHeader = ({ onMenuClick, title = 'Calendario', subtitle }) => {
+export const AppHeader = ({ onMenuClick }) => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const location = useLocation();
 	const shortcut = getSearchShortcut();
+	const isProfile = location.pathname === '/profile';
+	const title = isProfile ? 'Mi perfil' : 'Calendario';
+	const subtitle = isProfile ? 'Gestiona tu foto y datos personales' : undefined;
 
 	const handleNewEvent = () => {
 		dispatch(clearNote());
+		if (location.pathname !== '/') {
+			navigate('/');
+		}
 		dispatch(openModal());
 	};
 

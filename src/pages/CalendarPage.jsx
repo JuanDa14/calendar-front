@@ -4,13 +4,7 @@ import { motion } from 'framer-motion';
 import { CalendarPlus } from 'lucide-react';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-import {
-	CalendarEvent,
-	CalendarModal,
-	MembersModal,
-	Spinner,
-	TeamModal,
-} from '@/components';
+import { CalendarEvent, Spinner } from '@/components';
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/ui/empty-state';
 import { localizer, messages } from '@/utilities';
@@ -18,7 +12,6 @@ import { clearNote, findNoteById } from '@/redux/slices/noteSlice';
 import { openModal } from '@/redux/slices/uiSlice';
 
 const CalendarPage = () => {
-	const { modal, modalTeam, modalMembers } = useSelector((state) => state.ui);
 	const { notes, loading } = useSelector((state) => state.note);
 	const { user, checking } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
@@ -49,10 +42,6 @@ const CalendarPage = () => {
 
 	return (
 		<>
-			{modal && <CalendarModal />}
-			{modalTeam && <TeamModal />}
-			{modalMembers && <MembersModal />}
-
 			<motion.main
 				initial={{ opacity: 0, y: 8 }}
 				animate={{ opacity: 1, y: 0 }}

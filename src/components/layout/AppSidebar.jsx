@@ -14,9 +14,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { clearNote } from '@/redux/slices/noteSlice';
 import {
-	openModal,
 	openModalMembers,
 	openModalTeam,
 	setCommandOpen,
@@ -32,12 +30,6 @@ export const AppSidebar = ({ open, onClose }) => {
 	const hasTeam = Boolean(team);
 	const isOwner = owner?._id === uid;
 
-	const handleNewEvent = () => {
-		dispatch(clearNote());
-		dispatch(openModal());
-		onClose?.();
-	};
-
 	const handleTeam = () => {
 		if (hasTeam) {
 			dispatch(openModalMembers());
@@ -50,15 +42,21 @@ export const AppSidebar = ({ open, onClose }) => {
 	const content = (
 		<div className='flex h-full flex-col'>
 			<div className='flex h-14 items-center gap-2 border-b border-sidebar-border px-4'>
-				<div className='flex size-8 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground'>
-					<CalendarDays className='size-4' />
-				</div>
-				<div className='min-w-0 flex-1'>
-					<p className='truncate text-sm font-semibold'>CalendarApp</p>
-					{team && (
-						<p className='truncate text-xs capitalize text-muted-foreground'>{team}</p>
-					)}
-				</div>
+				<Link
+					to='/'
+					onClick={() => onClose?.()}
+					className='flex min-w-0 flex-1 items-center gap-2 transition-colors hover:opacity-80'
+				>
+					<div className='flex size-8 shrink-0 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground'>
+						<CalendarDays className='size-4' />
+					</div>
+					<div className='min-w-0 flex-1'>
+						<p className='truncate text-sm font-semibold'>CalendarApp</p>
+						{team && (
+							<p className='truncate text-xs capitalize text-muted-foreground'>{team}</p>
+						)}
+					</div>
+				</Link>
 				<Button
 					variant='ghost'
 					size='icon'
@@ -72,12 +70,14 @@ export const AppSidebar = ({ open, onClose }) => {
 
 			<nav className='flex-1 space-y-1 p-3' aria-label='Menú lateral'>
 				<Button
-					variant='secondary'
+					variant={location.pathname === '/' ? 'secondary' : 'ghost'}
 					className='w-full justify-start gap-2'
-					onClick={handleNewEvent}
+					asChild
 				>
-					<CalendarDays className='size-4' />
-					Calendario
+					<Link to='/' onClick={() => onClose?.()}>
+						<CalendarDays className='size-4' />
+						Calendario
+					</Link>
 				</Button>
 
 				<Button
