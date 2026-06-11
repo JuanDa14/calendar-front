@@ -186,7 +186,7 @@ export const getMembersAndEvents = () => async (dispatch) => {
 
 	const data = await getTeamService(options);
 
-	if (data.ok) {
+	if (data.ok && data.eventos) {
 		const events = fomartEvent(data.eventos.events || []);
 		dispatch(addAllNotes(events));
 		dispatch(

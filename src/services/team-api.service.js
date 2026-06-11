@@ -12,12 +12,14 @@ export const getTeamService = async (options) => {
 
 		return data;
 	} catch (error) {
-		const { data } = error.response;
-		const message = data.message || data.errors[0].message;
+		const data = error.response?.data;
+		const message =
+			data?.message || data?.errors?.[0]?.message || 'Error al procesar la solicitud';
 		showErrorMessage(message);
 
 		return {
 			ok: false,
+			message,
 		};
 	}
 };
@@ -33,12 +35,14 @@ export const postTeamService = async (options) => {
 
 		return data;
 	} catch (error) {
-		const { data } = error.response;
-		const message = data.message || data.errors[0].message;
+		const data = error.response?.data;
+		const message =
+			data?.message || data?.errors?.[0]?.message || 'Error al procesar la solicitud';
 		showErrorMessage(message);
 
 		return {
 			ok: false,
+			message,
 		};
 	}
 };
@@ -54,12 +58,14 @@ export const deleteTeamService = async (options) => {
 
 		return data;
 	} catch (error) {
-		const { data } = error.response;
-		const message = data.message || data.errors[0].message;
+		const data = error.response?.data;
+		const message =
+			data?.message || data?.errors?.[0]?.message || 'Error al procesar la solicitud';
 		showErrorMessage(message);
 
 		return {
 			ok: false,
+			message,
 		};
 	}
 };
@@ -75,12 +81,14 @@ export const updateTeamService = async (options) => {
 
 		return data;
 	} catch (error) {
-		const { data } = error.response;
-		const message = data.message || data.errors[0].message;
+		const data = error.response?.data;
+		const message =
+			data?.message || data?.errors?.[0]?.message || 'Error al procesar la solicitud';
 		showErrorMessage(message);
 
 		return {
 			ok: false,
+			message,
 		};
 	}
 };
