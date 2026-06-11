@@ -1,31 +1,41 @@
-import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
-import { KeyRound } from 'lucide-react';
+import { KeyRound, Loader2 } from 'lucide-react';
 
 import { AuthLayout } from '@/components/auth/AuthLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from '@/components/ui/form';
+import { resetPasswordSchema } from '@/lib/validations/auth';
 import { resetPassword } from '@/redux';
-import { isValidValuesOfResetPassword } from '@/validators';
-
-const initialState = { password: '', password2: '' };
 
 const ResetPasswordPage = () => {
 	const dispatch = useDispatch();
 	const { search } = useLocation();
 	const navigate = useNavigate();
-	const [values, setValues] = useState(initialState);
 	const { checking } = useSelector((state) => state.auth);
 
-	const onSubmit = async (e) => {
-		e.preventDefault();
-		const isValid = isValidValuesOfResetPassword(values);
-		if (isValid) {
-			const token = search.split('=')[1];
-			await dispatch(resetPassword(token, values));
+	const form = useForm({
+		resolver: zodResolver(resetPasswordSchema),
+		defaultValues: { password: '', password2: '' },
+	});
+
+	const onSubmit = async (values) => {
+		const token = search.split('=')[1];
+		if (!token) return;
+
+		const success = await dispatch(resetPassword(token, values));
+		if (success) {
 			navigate('/auth/login', { replace: true });
 		}
 	};
@@ -35,44 +45,64 @@ const ResetPasswordPage = () => {
 			title='Restablecer contraseña'
 			subtitle='Ingresa tu nueva contraseña y confírmala para completar el proceso'
 		>
-			<motion.form
-				initial={{ opacity: 0 }}
-				animate={{ opacity: 1 }}
-				transition={{ delay: 0.2 }}
-				onSubmit={onSubmit}
-				className='space-y-5'
-			>
-				<div className='space-y-2'>
-					<Label htmlFor='password'>Nueva contraseña</Label>
-					<Input
-						id='password'
-						type='password'
-						placeholder='••••••••'
-						required
-						minLength={6}
-						value={values.password}
-						onChange={(e) => setValues({ ...values, password: e.target.value })}
+			<Form {...form}>
+				<motion.form
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					transition={{ delay: 0.15 }}
+					onSubmit={form.handleSubmit(onSubmit)}
+					className='w-full space-y-5'
+				>
+					<FormField
+						control={form.control}
+						name='password'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Nueva contraseña</FormLabel>
+								<FormControl>
+									<Input
+										type='password'
+										placeholder='••••••••'
+										autoComplete='new-password'
+										className='w-full'
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
 					/>
-				</div>
 
-				<div className='space-y-2'>
-					<Label htmlFor='password2'>Confirmar contraseña</Label>
-					<Input
-						id='password2'
-						type='password'
-						placeholder='••••••••'
-						required
-						minLength={6}
-						value={values.password2}
-						onChange={(e) => setValues({ ...values, password2: e.target.value })}
+					<FormField
+						control={form.control}
+						name='password2'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Confirmar contraseña</FormLabel>
+								<FormControl>
+									<Input
+										type='password'
+										placeholder='••••••••'
+										autoComplete='new-password'
+										className='w-full'
+										{...field}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
 					/>
-				</div>
 
-				<Button type='submit' className='w-full' size='lg' disabled={checking}>
-					<KeyRound className='h-4 w-4' />
-					{checking ? 'Cargando...' : 'Restablecer contraseña'}
-				</Button>
-			</motion.form>
+					<Button type='submit' className='w-full' size='lg' disabled={checking}>
+						{checking ? (
+							<Loader2 className='h-4 w-4 animate-spin' />
+						) : (
+							<KeyRound className='h-4 w-4' />
+						)}
+						{checking ? 'Restableciendo...' : 'Restablecer contraseña'}
+					</Button>
+				</motion.form>
+			</Form>
 		</AuthLayout>
 	);
 };

@@ -89,6 +89,7 @@ export const registerUser = (values) => async (dispatch) => {
 	}
 
 	dispatch(checkingFinish());
+	return data.ok;
 };
 
 export const verifiedEmail = (token) => async (dispatch) => {
@@ -122,6 +123,7 @@ export const forgotPassword = (email) => async (dispatch) => {
 	}
 
 	dispatch(checkingFinish());
+	return data.ok;
 };
 
 export const resetPassword = (token, body) => async (dispatch) => {
@@ -139,4 +141,5 @@ export const resetPassword = (token, body) => async (dispatch) => {
 	}
 
 	dispatch(checkingFinish());
+	return data.ok;
 };
