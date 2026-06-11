@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
+import { AppLayout } from '@/components/layout/AppLayout';
 import { AppShell } from '@/components/layout/AppShell';
 
 const PublicRouter = lazy(() => import('../routes/PublicRouter'));
@@ -52,12 +53,17 @@ export const router = createBrowserRouter([
 				element: <PrivateRouter />,
 				children: [
 					{
-						index: true,
-						element: <CalendarPage />,
-					},
-					{
-						path: '*',
-						element: <CalendarPage />,
+						element: <AppLayout />,
+						children: [
+							{
+								index: true,
+								element: <CalendarPage />,
+							},
+							{
+								path: '*',
+								element: <CalendarPage />,
+							},
+						],
 					},
 				],
 			},
