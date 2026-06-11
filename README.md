@@ -1,68 +1,72 @@
-
 # CalendarApp
 
-Aplicacion web inspirado en OpenJira donde podras crear tus propios eventos poder organizarte de una manera facil, ademas permite crear tu equipo con tus miembros para que puedan saber que actividades se realizaran en las fechas establecidas.
+Aplicación web para crear y gestionar eventos en un calendario colaborativo. Permite crear equipos con miembros para coordinar actividades compartidas.
 
-`LINK DEL BACKEND : https://github.com/JuanDa14/calendar-back`
-
-## Capturas
-
-![App Screenshot](https://res.cloudinary.com/dbvyaguam/image/upload/v1690580251/calendar_ujtgrh.png)
-
-
-## 🛠 Skills
-ReactJs, JavaScript, TailwindCss 😉
-
-
-## Ejecutar Localmente
-
-Clonar el proyecto
-
-```bash
-  git clone https://github.com/JuanDa14/calendar-front
-```
-
-Ir a la carpeta clonada
-
-```bash
-  cd my-project
-```
-
-Instalar las dependencias
-
-```bash
-  npm install
-```
-
-Ejecutar el servidor
-
-```bash
-  npm run dev
-```
-
+**Backend:** [calendar-back](https://github.com/JuanDa14/calendar-back)
 
 ## Tech Stack
 
-**Client:** ReactJs, JavaScript, TailwindCSS, Redux
+- **Frontend:** React 18, Vite 6, TailwindCSS, shadcn/ui, Framer Motion, Redux Toolkit
+- **Backend:** Node.js, Express, MongoDB, Mongoose
 
-**Server:** Node, Express, JavaScript, Mongoose, MongoDB
+## Requisitos
 
+- Node.js 18+
+- MongoDB (local o Atlas)
+- Backend corriendo en `http://localhost:4000`
 
-## Produccion
-
-Para implementar este proyecto en produccion, ejecute
-
-```bash
-  npm run build
-```
+## Instalación y ejecución
 
 ```bash
-  npm run start
+# Clonar el repositorio
+git clone https://github.com/JuanDa14/calendar-front
+cd calendar-front
+
+# Instalar dependencias
+npm install
+
+# Configurar variables de entorno
+# Crear .env.development con:
+# VITE_API_URL=http://localhost:4000/api
+
+# Iniciar en desarrollo
+npm run dev
 ```
 
+La app estará disponible en `http://localhost:3000`.
 
-## 🔗 Links
+## Scripts
+
+| Comando | Descripción |
+|---------|-------------|
+| `npm run dev` | Servidor de desarrollo con hot reload |
+| `npm run build` | Build de producción |
+| `npm run preview` | Preview del build local |
+
+## Variables de entorno
+
+| Variable | Descripción | Ejemplo |
+|----------|-------------|---------|
+| `VITE_API_URL` | URL base de la API | `http://localhost:4000/api` |
+
+## Checklist de verificación
+
+- [ ] Login y registro funcionan
+- [ ] Verificación de email
+- [ ] Recuperación de contraseña
+- [ ] Crear, editar y eliminar eventos
+- [ ] Crear equipo y agregar miembros
+- [ ] Modo claro/oscuro
+- [ ] Layout responsive en mobile
+
+## Producción
+
+```bash
+npm run build
+npm run preview
+```
+
+## Links
+
 [![portfolio](https://img.shields.io/badge/my_portfolio-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://juancode.vercel.app/)
 [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/juan-david-morales-paredes-617342224/)
-[![instagram](https://img.shields.io/badge/instagram-1DA1F2?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/ju4n.code/)
-
