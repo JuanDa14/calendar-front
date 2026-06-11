@@ -1,63 +1,31 @@
-import ReactModal from 'react-modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { closeModal, closeModalMembers, closeModalTeam } from '../../redux/slices/uiSlice';
-import { clearShowMembers } from '../../redux/slices/teamSlice';
-
-import { customStyles } from '../../utilities';
+import { Dialog, DialogContent } from './dialog';
+import { closeModal, closeModalMembers, closeModalTeam } from '@/redux/slices/uiSlice';
+import { clearShowMembers } from '@/redux/slices/teamSlice';
 
 export const Modal = ({ children }) => {
 	const { modal, modalTeam, modalMembers } = useSelector((state) => state.ui);
-
 	const dispatch = useDispatch();
 
+	const isOpen = modal || modalTeam || modalMembers;
+
+	const handleClose = () => {
+		if (modal) dispatch(closeModal());
+		if (modalTeam) {
+			dispatch(clearShowMembers());
+			dispatch(closeModalTeam());
+		}
+		if (modalMembers) {
+			dispatch(clearShowMembers());
+			dispatch(closeModalMembers());
+		}
+	};
+
 	return (
-		<>
-			{modal && (
-				<ReactModal
-					isOpen={modal}
-					onRequestClose={() => {
-						dispatch(closeModal());
-					}}
-					style={customStyles}
-					closeTimeoutMS={200}
-					role={'dialog'}
-					className={'modal'}
-				>
-					{children}
-				</ReactModal>
-			)}
-
-			{modalTeam && (
-				<ReactModal
-					isOpen={modalTeam}
-					onRequestClose={() => {
-						dispatch(clearShowMembers());
-						dispatch(closeModalTeam());
-					}}
-					style={customStyles}
-					closeTimeoutMS={200}
-					role={'dialog'}
-					className={'modal'}
-				>
-					{children}
-				</ReactModal>
-			)}
-
-			{modalMembers && (
-				<ReactModal
-					isOpen={modalMembers}
-					onRequestClose={() => {
-						dispatch(clearShowMembers());
-						dispatch(closeModalMembers());
-					}}
-					style={customStyles}
-					closeTimeoutMS={200}
-					role={'dialog'}
-					className={'modal'}
-				>
-					{children}
-				</ReactModal>
-			)}
-		</>
+		<Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
+			<DialogContent className='max-w-2xl max-h-[90vh] overflow-y-auto p-0 sm:rounded-2xl'>
+				{children}
+			</DialogContent>
+		</Dialog>
 	);
 };
