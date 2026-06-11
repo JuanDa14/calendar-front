@@ -3,21 +3,15 @@ import { motion } from 'framer-motion';
 import { Trash2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
+import { useEventPermissions } from '@/hooks/useEventPermissions';
 import { deleteNote } from '@/redux';
 
 export const ButtonDeleteEvent = () => {
 	const dispatch = useDispatch();
 	const { note, loading } = useSelector((state) => state.note);
-	const { uid, team } = useSelector((state) => state.auth.user);
-	const { owner } = useSelector((state) => state.team);
+	const { canDelete } = useEventPermissions(note._id, note.userId);
 
 	if (!note._id) return null;
-
-	const isDisabled = team
-		? note.userId !== uid
-			? owner._id !== uid
-			: loading
-		: loading;
 
 	return (
 		<motion.div
@@ -30,7 +24,7 @@ export const ButtonDeleteEvent = () => {
 			<Button
 				variant='destructive'
 				size='icon'
-				disabled={isDisabled}
+				disabled={loading || !canDelete}
 				onClick={() => dispatch(deleteNote(note._id))}
 				className='h-14 w-14 rounded-full shadow-lg'
 				aria-label='Eliminar evento'

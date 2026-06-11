@@ -19,7 +19,8 @@ export const noteSlice = createSlice({
 		},
 
 		findNoteById: (state, action) => {
-			state.note = state.notes.find((note) => note._id === action.payload);
+			const found = state.notes.find((note) => note._id === action.payload);
+			state.note = found || {};
 		},
 
 		updateNoteById: (state, action) => {
@@ -38,6 +39,10 @@ export const noteSlice = createSlice({
 
 		clearNote: (state) => {
 			state.note = {};
+		},
+
+		setDraftNote: (state, action) => {
+			state.note = action.payload;
 		},
 
 		clearNotes: (state) => {
@@ -61,6 +66,7 @@ export const {
 	updateNoteById,
 	deleteNoteById,
 	clearNote,
+	setDraftNote,
 	clearNotes,
 	loadingFinish,
 	loadingStart,

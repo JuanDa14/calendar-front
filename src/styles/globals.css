@@ -24,6 +24,8 @@
 		--input: 214.3 31.8% 91.4%;
 		--ring: 221.2 83.2% 53.3%;
 		--radius: 0.75rem;
+		--event-own: 221.2 83.2% 53.3%;
+		--event-team: 215.4 16.3% 46.9%;
 	}
 
 	.dark {
@@ -46,6 +48,8 @@
 		--border: 217.2 32.6% 17.5%;
 		--input: 217.2 32.6% 17.5%;
 		--ring: 224.3 76.3% 48%;
+		--event-own: 217.2 91.2% 59.8%;
+		--event-team: 215 20.2% 55%;
 	}
 
 	* {
@@ -54,6 +58,10 @@
 
 	body {
 		@apply bg-background text-foreground font-sans antialiased;
+	}
+
+	:focus-visible {
+		@apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
 	}
 }
 
@@ -75,41 +83,126 @@
 }
 
 ::-webkit-scrollbar-thumb {
-	@apply bg-primary/60 rounded-full;
+	@apply rounded-full bg-primary/60;
 }
 
+/* react-big-calendar — shadcn token overrides */
 .rbc-calendar {
 	@apply bg-card text-card-foreground;
+	font-family: inherit;
+}
+
+.rbc-toolbar {
+	@apply mb-4 flex flex-wrap items-center gap-2;
 }
 
 .rbc-toolbar button {
-	@apply text-foreground border-border hover:bg-accent;
+	@apply rounded-md border border-input bg-background px-3 py-1.5 text-sm text-foreground transition-colors hover:bg-accent hover:text-accent-foreground;
+}
+
+.rbc-toolbar button:active,
+.rbc-toolbar button.rbc-active {
+	@apply bg-primary text-primary-foreground shadow-sm;
+}
+
+.rbc-toolbar-label {
+	@apply text-base font-semibold text-foreground;
 }
 
 .rbc-header {
-	@apply border-border text-muted-foreground font-medium py-2;
+	@apply border-border py-3 text-xs font-medium uppercase tracking-wide text-muted-foreground;
+}
+
+.rbc-header + .rbc-header {
+	@apply border-border;
 }
 
 .rbc-today {
-	@apply bg-primary/5;
+	@apply bg-primary/10;
 }
 
 .rbc-off-range-bg {
-	@apply bg-muted/30;
+	@apply bg-muted/20;
+}
+
+.rbc-off-range {
+	@apply text-muted-foreground/50;
+}
+
+.rbc-date-cell {
+	@apply px-2 py-1 text-sm;
+}
+
+.rbc-date-cell.rbc-now {
+	@apply font-semibold text-primary;
 }
 
 .rbc-event {
-	@apply shadow-sm;
+	@apply cursor-pointer shadow-sm transition-opacity hover:opacity-90;
+}
+
+.rbc-event:focus {
+	@apply outline-none ring-2 ring-ring;
+}
+
+.rbc-event-label {
+	@apply text-xs;
+}
+
+.rbc-show-more {
+	@apply text-xs font-medium text-primary hover:underline;
 }
 
 .rbc-month-view,
 .rbc-time-view,
 .rbc-agenda-view {
-	@apply border-border;
+	@apply overflow-hidden rounded-lg border border-border;
 }
 
 .rbc-day-bg + .rbc-day-bg,
 .rbc-month-row + .rbc-month-row,
-.rbc-timeslot-group {
+.rbc-timeslot-group,
+.rbc-time-header-content,
+.rbc-time-content,
+.rbc-agenda-table,
+.rbc-agenda-date-cell,
+.rbc-agenda-time-cell {
 	@apply border-border;
+}
+
+.rbc-time-slot {
+	@apply text-xs text-muted-foreground;
+}
+
+.rbc-time-header-gutter,
+.rbc-time-gutter {
+	@apply text-muted-foreground;
+}
+
+.rbc-current-time-indicator {
+	@apply bg-primary;
+}
+
+.rbc-overlay {
+	@apply rounded-lg border border-border bg-popover p-2 shadow-lg;
+}
+
+.rbc-overlay-header {
+	@apply mb-2 border-b border-border pb-2 text-sm font-medium;
+}
+
+.rbc-selected-cell {
+	@apply bg-primary/15;
+}
+
+.rbc-slot-selection {
+	@apply bg-primary/20;
+}
+
+.rbc-agenda-view table {
+	@apply text-sm;
+}
+
+.rbc-agenda-event-cell {
+	@apply text-foreground;
 }

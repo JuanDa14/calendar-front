@@ -1,133 +1,190 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { CalendarPlus, X } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { format } from 'date-fns';
+import { CalendarPlus, Loader2, X } from 'lucide-react';
 
 import { Modal } from '@/components/ui';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from '@/components/ui/form';
+import { DialogDescription, DialogTitle } from '@/components/ui/dialog';
+import { eventSchema } from '@/lib/validations/auth';
+import { useEventPermissions } from '@/hooks/useEventPermissions';
 import { createNote, updateNote } from '@/redux';
 import { closeModal } from '@/redux/slices/uiSlice';
 
-const initialValues = {
-	title: '',
-	notes: '',
-	start: new Date(),
-	end: new Date(),
+const toDateInput = (value) => {
+	if (!value) return '';
+	const date = value instanceof Date ? value : new Date(value);
+	if (Number.isNaN(date.getTime())) return '';
+	return format(date, 'yyyy-MM-dd');
 };
 
 export const CalendarModal = () => {
 	const dispatch = useDispatch();
 	const { note, loading } = useSelector((state) => state.note);
-	const { uid, team } = useSelector((state) => state.auth.user);
-	const { owner } = useSelector((state) => state.team);
-	const [values, setValues] = useState(initialValues);
+	const { canEdit } = useEventPermissions(note._id, note.userId);
+
+	const form = useForm({
+		resolver: zodResolver(eventSchema),
+		defaultValues: {
+			title: '',
+			notes: '',
+			start: new Date(),
+			end: new Date(),
+		},
+	});
 
 	useEffect(() => {
-		if (note._id) {
-			setValues(note);
+		if (note._id || note.start) {
+			form.reset({
+				title: note.title || '',
+				notes: note.notes || '',
+				start: note.start ? new Date(note.start) : new Date(),
+				end: note.end ? new Date(note.end) : new Date(),
+			});
 		} else {
-			setValues(initialValues);
+			form.reset({ title: '', notes: '', start: new Date(), end: new Date() });
 		}
-	}, [note._id]);
+	}, [note._id, note.start, note.end, form]);
 
-	const onSubmit = (e) => {
-		e.preventDefault();
+	const onSubmit = (values) => {
 		if (note._id) {
-			dispatch(updateNote(values));
+			dispatch(updateNote({ ...note, ...values }));
 		} else {
 			dispatch(createNote(values));
 		}
 	};
 
-	const isDisabled =
-		team
-			? note._id
-				? note.userId !== uid
-					? owner._id !== uid
-					: loading
-				: loading
-			: loading;
+	const isDisabled = loading || (note._id && !canEdit);
 
 	return (
 		<Modal>
 			<div className='w-full max-w-md p-6'>
 				<div className='mb-6 flex items-start gap-4'>
 					<div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary'>
-						<CalendarPlus className='h-6 w-6' />
+						<CalendarPlus className='h-6 w-6' aria-hidden='true' />
 					</div>
-					<div>
-						<h2 className='text-xl font-semibold'>
-							{note._id ? 'Actualizar evento' : 'Nuevo evento'}
-						</h2>
-						<p className='text-sm text-muted-foreground'>
-							{note._id ? 'Modifica los datos del evento' : 'Completa la información del evento'}
-						</p>
+					<div className='space-y-1'>
+						<DialogTitle>{note._id ? 'Actualizar evento' : 'Nuevo evento'}</DialogTitle>
+						<DialogDescription>
+							{note._id
+								? 'Modifica los datos del evento seleccionado'
+								: 'Completa la información para crear un nuevo evento'}
+						</DialogDescription>
 					</div>
 				</div>
 
-				<form className='space-y-4' onSubmit={onSubmit}>
-					<div className='space-y-2'>
-						<Label htmlFor='title'>Título</Label>
-						<Input
-							id='title'
-							placeholder='Reunión de equipo...'
-							required
-							minLength={3}
-							value={values.title}
-							onChange={(e) => setValues({ ...values, title: e.target.value })}
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(onSubmit)} className='w-full space-y-4'>
+						<FormField
+							control={form.control}
+							name='title'
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Título</FormLabel>
+									<FormControl>
+										<Input
+											placeholder='Reunión de equipo...'
+											className='w-full'
+											disabled={isDisabled}
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
 						/>
-					</div>
 
-					<div className='grid gap-4 sm:grid-cols-2'>
-						<div className='space-y-2'>
-							<Label htmlFor='start'>Inicio</Label>
-							<Input
-								id='start'
-								type='date'
-								required
-								value={new Date(values.start).toISOString().split('T')[0]}
-								onChange={(e) => setValues({ ...values, start: e.target.value })}
+						<div className='grid gap-4 sm:grid-cols-2'>
+							<FormField
+								control={form.control}
+								name='start'
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Inicio</FormLabel>
+										<FormControl>
+											<Input
+												type='date'
+												className='w-full'
+												disabled={isDisabled}
+												value={toDateInput(field.value)}
+												onChange={(e) => field.onChange(new Date(e.target.value))}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name='end'
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Fin</FormLabel>
+										<FormControl>
+											<Input
+												type='date'
+												className='w-full'
+												disabled={isDisabled}
+												value={toDateInput(field.value)}
+												onChange={(e) => field.onChange(new Date(e.target.value))}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
 							/>
 						</div>
-						<div className='space-y-2'>
-							<Label htmlFor='end'>Fin</Label>
-							<Input
-								id='end'
-								type='date'
-								required
-								value={new Date(values.end).toISOString().split('T')[0]}
-								onChange={(e) => setValues({ ...values, end: e.target.value })}
-							/>
-						</div>
-					</div>
 
-					<div className='space-y-2'>
-						<Label htmlFor='notes'>Descripción</Label>
-						<Input
-							id='notes'
-							placeholder='Detalles adicionales...'
-							value={values.notes || ''}
-							onChange={(e) => setValues({ ...values, notes: e.target.value })}
+						<FormField
+							control={form.control}
+							name='notes'
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Descripción</FormLabel>
+									<FormControl>
+										<Textarea
+											placeholder='Detalles adicionales...'
+											className='w-full resize-none'
+											rows={3}
+											disabled={isDisabled}
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
 						/>
-					</div>
 
-					<div className='flex gap-3 pt-2'>
-						<Button
-							type='button'
-							variant='outline'
-							className='flex-1'
-							disabled={loading}
-							onClick={() => dispatch(closeModal())}
-						>
-							<X className='h-4 w-4' />
-							Cancelar
-						</Button>
-						<Button type='submit' className='flex-1' disabled={isDisabled}>
-							{note._id ? 'Actualizar' : 'Crear'}
-						</Button>
-					</div>
-				</form>
+						<div className='flex gap-3 pt-2'>
+							<Button
+								type='button'
+								variant='outline'
+								className='flex-1'
+								disabled={loading}
+								onClick={() => dispatch(closeModal())}
+							>
+								<X className='h-4 w-4' />
+								Cancelar
+							</Button>
+							<Button type='submit' className='flex-1' disabled={isDisabled}>
+								{loading && <Loader2 className='h-4 w-4 animate-spin' />}
+								{note._id ? 'Actualizar' : 'Crear'}
+							</Button>
+						</div>
+					</form>
+				</Form>
 			</div>
 		</Modal>
 	);
