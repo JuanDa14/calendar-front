@@ -10,6 +10,7 @@ import {
 	showCustomMessageWithConfirm,
 	showDeleteMessageWithConfirm,
 	showErrorMessage,
+	showInfoMessage,
 	showSuccessMessage,
 } from '../../utilities';
 
@@ -18,17 +19,23 @@ import { addAllNotes, clearNote, clearNotes, deleteNotesByMemberId } from '../sl
 import {
 	addMember,
 	clearMembers,
+	clearMyJoinRequest,
 	clearSearchResults,
 	clearTeamSearchResults,
+	finishJoinRequestsLoading,
 	finishLoading,
 	finishSearching,
 	finishSearchingTeams,
+	removeJoinRequest,
 	removeMember,
 	resetTeam,
+	setJoinRequests,
+	setMyJoinRequest,
 	setOwnerAndMembers,
 	setSearchResults,
 	setTeamSearchResults,
 	setTeamDescription,
+	startJoinRequestsLoading,
 	startLoading,
 	startSearching,
 	startSearchingTeams,
@@ -51,14 +58,48 @@ export const closeCreateTeamModal = () => async (dispatch, getState) => {
 	}
 };
 
-export const openJoinTeamModal = () => (dispatch) => {
+export const openJoinTeamModal = () => async (dispatch) => {
 	dispatch(clearTeamSearchResults());
 	dispatch(openModalJoinTeam());
+	await dispatch(fetchMyJoinRequest());
 };
 
 export const closeJoinTeamModal = () => (dispatch) => {
 	dispatch(clearTeamSearchResults());
 	dispatch(closeModalJoinTeam());
+};
+
+export const fetchJoinRequests = () => async (dispatch) => {
+	dispatch(startJoinRequestsLoading());
+
+	const data = await getTeamService({ endpoint: '/join-requests' });
+
+	if (data.ok) {
+		dispatch(setJoinRequests(data.requests || []));
+	}
+
+	dispatch(finishJoinRequestsLoading());
+};
+
+export const fetchMyJoinRequest = () => async (dispatch) => {
+	const data = await getTeamService({ endpoint: '/my-join-request' });
+
+	if (data.ok) {
+		dispatch(setMyJoinRequest(data.request));
+	}
+};
+
+export const syncTeamJoinData = () => async (dispatch, getState) => {
+	const { user } = getState().auth;
+	const { owner } = getState().team;
+
+	if (!user?.uid) return;
+
+	if (user.team && owner?._id === user.uid) {
+		await dispatch(fetchJoinRequests());
+	} else if (!user.team) {
+		await dispatch(fetchMyJoinRequest());
+	}
 };
 
 export const searchTeams = (query) => async (dispatch) => {
@@ -85,12 +126,12 @@ export const searchTeams = (query) => async (dispatch) => {
 	dispatch(finishSearchingTeams());
 };
 
-export const joinTeam = (teamId, teamName) => async (dispatch) => {
+export const requestJoinTeam = (teamId, teamName) => async (dispatch) => {
 	const { isConfirmed } = await showCustomMessageWithConfirm(
 		'question',
-		`¿Unirte al equipo "${teamName}"?`,
-		'Tus eventos personales pasarán al calendario compartido del equipo.',
-		'Sí, unirme',
+		`¿Solicitar unirte al equipo "${teamName}"?`,
+		'El propietario del equipo debe aprobar tu solicitud.',
+		'Enviar solicitud',
 		'Cancelar'
 	);
 
@@ -99,22 +140,81 @@ export const joinTeam = (teamId, teamName) => async (dispatch) => {
 	dispatch(startLoading());
 
 	const data = await postTeamService({
-		endpoint: `/join/${teamId}`,
+		endpoint: `/request-join/${teamId}`,
 		body: {},
 	});
 
 	if (data.ok) {
-		dispatch(setNameTeam(data.team.name));
-		dispatch(
-			setOwnerAndMembers({
-				...data.team,
-				id: data.team.id,
-				description: data.team.description,
-			})
-		);
-		await dispatch(getMembersAndEvents());
-		dispatch(closeJoinTeamModal());
-		showSuccessMessage(data.message || 'Te uniste al equipo correctamente');
+		dispatch(setMyJoinRequest(data.request));
+		showInfoMessage(data.message || 'Solicitud enviada. Espera la aprobación del propietario.');
+	}
+
+	dispatch(finishLoading());
+};
+
+export const approveJoinRequest = (requestId) => async (dispatch) => {
+	dispatch(startLoading());
+
+	const data = await postTeamService({
+		endpoint: `/join-requests/${requestId}/approve`,
+		body: {},
+	});
+
+	if (data.ok) {
+		dispatch(removeJoinRequest(requestId));
+		if (data.member) dispatch(addMember(data.member));
+		showSuccessMessage(data.message || 'Solicitud aprobada');
+	}
+
+	dispatch(finishLoading());
+};
+
+export const rejectJoinRequest = (requestId, userName) => async (dispatch) => {
+	const { isConfirmed } = await showCustomMessageWithConfirm(
+		'question',
+		`¿Rechazar la solicitud de ${userName}?`,
+		'El usuario será notificado en tiempo real.',
+		'Sí, rechazar',
+		'Cancelar'
+	);
+
+	if (!isConfirmed) return;
+
+	dispatch(startLoading());
+
+	const data = await postTeamService({
+		endpoint: `/join-requests/${requestId}/reject`,
+		body: {},
+	});
+
+	if (data.ok) {
+		dispatch(removeJoinRequest(requestId));
+		showSuccessMessage(data.message || 'Solicitud rechazada');
+	}
+
+	dispatch(finishLoading());
+};
+
+export const cancelJoinRequest = (requestId) => async (dispatch) => {
+	const { isConfirmed } = await showCustomMessageWithConfirm(
+		'question',
+		'¿Cancelar tu solicitud de unión?',
+		'Podrás enviar una nueva solicitud después.',
+		'Sí, cancelar',
+		'No'
+	);
+
+	if (!isConfirmed) return;
+
+	dispatch(startLoading());
+
+	const data = await deleteTeamService({
+		endpoint: `/join-requests/${requestId}`,
+	});
+
+	if (data.ok) {
+		dispatch(clearMyJoinRequest());
+		showSuccessMessage(data.message || 'Solicitud cancelada');
 	}
 
 	dispatch(finishLoading());
@@ -392,6 +492,7 @@ export const getMembersAndEvents = () => async (dispatch) => {
 				description: data.eventos.description || '',
 			})
 		);
+		await dispatch(syncTeamJoinData());
 	}
 
 	dispatch(finishLoading());

@@ -1,10 +1,11 @@
 import { postAuthService, getAuthService } from '../../services';
+import { disconnectSocket } from '../../api/socket';
 import { authFormatUser, removeCookie, setCookie, showSuccessMessage } from '../../utilities';
 import { checkingFinish, checkingStart, login, logout, verifiedUser } from '../slices/authSlice';
 import { clearNote, clearNotes } from '../slices/noteSlice';
 import { clearMembers, resetTeam } from '../slices/teamSlice';
 import { getAllNotes } from './note';
-import { getMembersAndEvents } from './team';
+import { getMembersAndEvents, syncTeamJoinData } from './team';
 
 export const loginUser = (values) => async (dispatch) => {
 	dispatch(checkingStart());
@@ -27,6 +28,7 @@ export const loginUser = (values) => async (dispatch) => {
 			await dispatch(getMembersAndEvents());
 		} else {
 			dispatch(getAllNotes(data.accessToken));
+			await dispatch(syncTeamJoinData());
 		}
 	}
 
@@ -58,6 +60,7 @@ export const refreshUser = (refreshToken) => async (dispatch) => {
 			await dispatch(getMembersAndEvents());
 		} else {
 			dispatch(getAllNotes(data.accessToken));
+			await dispatch(syncTeamJoinData());
 		}
 	} else {
 		removeCookie(['accessToken', 'refreshToken']);
@@ -66,6 +69,7 @@ export const refreshUser = (refreshToken) => async (dispatch) => {
 };
 
 export const logoutUser = () => (dispatch) => {
+	disconnectSocket();
 	removeCookie(['accessToken', 'refreshToken']);
 	dispatch(clearMembers());
 	dispatch(resetTeam());

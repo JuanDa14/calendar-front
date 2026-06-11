@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+	Check,
+	Clock,
 	Loader2,
 	Save,
 	Settings2,
@@ -21,13 +23,22 @@ import { Separator } from '@/components/ui/separator';
 import { UserAvatar } from '@/components/ui/user-avatar';
 import { cn } from '@/lib/utils';
 import { closeModalMembers } from '@/redux/slices/uiSlice';
-import { deleteMember, deleteTeam, leaveTeam, updateTeam } from '@/redux/thunks/team';
+import {
+	approveJoinRequest,
+	deleteMember,
+	deleteTeam,
+	fetchJoinRequests,
+	leaveTeam,
+	rejectJoinRequest,
+	updateTeam,
+} from '@/redux/thunks/team';
 import { MemberSearch } from './MemberSearch';
 
 export const MembersModal = () => {
 	const dispatch = useDispatch();
 	const [editValues, setEditValues] = useState({ name: '', description: '' });
-	const { members, owner, loading, description } = useSelector((state) => state.team);
+	const { members, owner, loading, description, joinRequests, joinRequestsLoading } =
+		useSelector((state) => state.team);
 	const { teamModalTab } = useSelector((state) => state.ui);
 	const { team, uid } = useSelector((state) => state.auth.user);
 	const isOwner = uid === owner._id;
@@ -40,6 +51,12 @@ export const MembersModal = () => {
 	useEffect(() => {
 		setEditValues({ name: team || '', description: description || '' });
 	}, [team, description]);
+
+	useEffect(() => {
+		if (isOwner) {
+			dispatch(fetchJoinRequests());
+		}
+	}, [dispatch, isOwner]);
 
 	const handleUpdateTeam = (e) => {
 		e.preventDefault();
@@ -67,6 +84,24 @@ export const MembersModal = () => {
 						>
 							<Users className='size-4' />
 							Miembros
+						</button>
+						<button
+							type='button'
+							className={cn(
+								'relative flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors',
+								activeTab === 'requests'
+									? 'bg-primary text-primary-foreground'
+									: 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+							)}
+							onClick={() => setActiveTab('requests')}
+						>
+							<Clock className='size-4' />
+							Solicitudes
+							{joinRequests.length > 0 && (
+								<span className='absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground'>
+									{joinRequests.length}
+								</span>
+							)}
 						</button>
 						<button
 							type='button'
@@ -152,6 +187,90 @@ export const MembersModal = () => {
 							</div>
 						</div>
 					</form>
+				) : activeTab === 'requests' && isOwner ? (
+					<div className='space-y-5'>
+						<ModalSection
+							title={`Solicitudes pendientes (${joinRequests.length})`}
+							description='Aprueba o rechaza solicitudes en tiempo real'
+						>
+							{joinRequestsLoading ? (
+								<div className='flex justify-center py-8'>
+									<Loader2 className='size-6 animate-spin text-muted-foreground' />
+								</div>
+							) : joinRequests.length === 0 ? (
+								<div className='rounded-lg border border-dashed px-4 py-8 text-center'>
+									<p className='text-sm text-muted-foreground'>
+										No hay solicitudes pendientes
+									</p>
+								</div>
+							) : (
+								<ul className='space-y-2'>
+									{joinRequests.map((request) => (
+										<li
+											key={request._id}
+											className='flex items-center justify-between gap-3 rounded-lg border bg-muted/30 px-3 py-2.5'
+										>
+											<div className='flex min-w-0 items-center gap-2.5'>
+												<UserAvatar
+													name={request.user.name}
+													avatar={request.user.avatar}
+													size='sm'
+												/>
+												<div className='min-w-0'>
+													<p className='truncate text-sm font-medium capitalize'>
+														{request.user.name}
+													</p>
+													{request.user.email && (
+														<p className='truncate text-xs text-muted-foreground'>
+															{request.user.email}
+														</p>
+													)}
+												</div>
+											</div>
+											<div className='flex shrink-0 gap-1'>
+												<Button
+													variant='ghost'
+													size='icon'
+													disabled={loading}
+													onClick={() =>
+														dispatch(
+															rejectJoinRequest(
+																request._id,
+																request.user.name
+															)
+														)
+													}
+													aria-label={`Rechazar ${request.user.name}`}
+													className='text-destructive hover:text-destructive'
+												>
+													<X className='size-4' />
+												</Button>
+												<Button
+													variant='ghost'
+													size='icon'
+													disabled={loading}
+													onClick={() =>
+														dispatch(approveJoinRequest(request._id))
+													}
+													aria-label={`Aprobar ${request.user.name}`}
+													className='text-green-600 hover:text-green-600'
+												>
+													<Check className='size-4' />
+												</Button>
+											</div>
+										</li>
+									))}
+								</ul>
+							)}
+						</ModalSection>
+
+						<div className='flex justify-end'>
+							<Button variant='outline' onClick={() => dispatch(closeModalMembers())}>
+								<X className='size-4' />
+								Cerrar
+							</Button>
+						</div>
+					</div>
 				) : (
 					<div className='space-y-5'>
 						{isOwner && (

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { CalendarPlus, LogOut, Moon, Settings2, Sun, User, Users } from 'lucide-react';
+import { CalendarPlus, Clock, LogOut, Moon, Settings2, Sun, User, Users } from 'lucide-react';
 
 import {
 	CommandDialog,
@@ -31,6 +31,7 @@ export const CommandPalette = () => {
 	const { theme, setTheme } = useTheme();
 	const { commandOpen } = useSelector((state) => state.ui);
 	const { owner } = useSelector((state) => state.team);
+	const { joinRequests } = useSelector((state) => state.team);
 	const { team, uid } = useSelector((state) => state.auth.user);
 	const isOwner = owner?._id === uid;
 	const shortcut = getSearchShortcut();
@@ -97,6 +98,14 @@ export const CommandPalette = () => {
 						>
 							<Settings2 className='size-4' />
 							Editar equipo
+						</CommandItem>
+					)}
+					{team && isOwner && joinRequests.length > 0 && (
+						<CommandItem
+							onSelect={() => run(() => dispatch(openModalMembers('requests')))}
+						>
+							<Clock className='size-4' />
+							Solicitudes de unión ({joinRequests.length})
 						</CommandItem>
 					)}
 				</CommandGroup>

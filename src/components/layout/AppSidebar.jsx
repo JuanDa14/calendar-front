@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import {
 	CalendarDays,
+	Clock,
 	LogOut,
 	PanelLeftClose,
 	Search,
@@ -23,7 +24,7 @@ export const AppSidebar = ({ open, onClose }) => {
 	const dispatch = useDispatch();
 	const location = useLocation();
 	const { name, team, uid, avatar } = useSelector((state) => state.auth.user);
-	const { members, owner, description } = useSelector((state) => state.team);
+	const { members, owner, description, joinRequests } = useSelector((state) => state.team);
 	const hasTeam = Boolean(team);
 	const isOwner = owner?._id === uid;
 
@@ -117,12 +118,30 @@ export const AppSidebar = ({ open, onClose }) => {
 					<>
 						<Button
 							variant='ghost'
-							className='w-full justify-start gap-2'
+							className='relative w-full justify-start gap-2'
 							onClick={handleTeam}
 						>
 							<Users className='size-4' />
 							Ver miembros
+							{isOwner && joinRequests.length > 0 && (
+								<span className='ml-auto flex size-5 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground'>
+									{joinRequests.length}
+								</span>
+							)}
 						</Button>
+						{isOwner && joinRequests.length > 0 && (
+							<Button
+								variant='ghost'
+								className='w-full justify-start gap-2'
+								onClick={() => {
+									dispatch(openModalMembers('requests'));
+									onClose?.();
+								}}
+							>
+								<Clock className='size-4' />
+								Solicitudes ({joinRequests.length})
+							</Button>
+						)}
 						{!isOwner && (
 							<Button
 								variant='ghost'

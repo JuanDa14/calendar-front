@@ -10,6 +10,9 @@ const initialState = {
 	searchResults: [],
 	searchingTeams: false,
 	teamSearchResults: [],
+	joinRequests: [],
+	myJoinRequest: null,
+	joinRequestsLoading: false,
 };
 
 export const teamSlice = createSlice({
@@ -71,6 +74,35 @@ export const teamSlice = createSlice({
 			state.teamSearchResults = [];
 		},
 
+		setJoinRequests: (state, action) => {
+			state.joinRequests = action.payload;
+		},
+
+		addJoinRequest: (state, action) => {
+			const exists = state.joinRequests.some((req) => req._id === action.payload._id);
+			if (!exists) state.joinRequests.unshift(action.payload);
+		},
+
+		removeJoinRequest: (state, action) => {
+			state.joinRequests = state.joinRequests.filter((req) => req._id !== action.payload);
+		},
+
+		setMyJoinRequest: (state, action) => {
+			state.myJoinRequest = action.payload;
+		},
+
+		clearMyJoinRequest: (state) => {
+			state.myJoinRequest = null;
+		},
+
+		startJoinRequestsLoading: (state) => {
+			state.joinRequestsLoading = true;
+		},
+
+		finishJoinRequestsLoading: (state) => {
+			state.joinRequestsLoading = false;
+		},
+
 		clearMembers: (state) => {
 			state.members = [];
 		},
@@ -86,6 +118,8 @@ export const teamSlice = createSlice({
 			state.description = '';
 			state.searchResults = [];
 			state.teamSearchResults = [];
+			state.joinRequests = [];
+			state.myJoinRequest = null;
 		},
 	},
 });
@@ -106,6 +140,13 @@ export const {
 	finishSearchingTeams,
 	setTeamSearchResults,
 	clearTeamSearchResults,
+	setJoinRequests,
+	addJoinRequest,
+	removeJoinRequest,
+	setMyJoinRequest,
+	clearMyJoinRequest,
+	startJoinRequestsLoading,
+	finishJoinRequestsLoading,
 	resetTeam,
 } = teamSlice.actions;
 

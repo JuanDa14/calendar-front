@@ -6,9 +6,13 @@ import { CalendarModal, JoinTeamModal, MembersModal, TeamModal } from '@/compone
 import { AppHeader } from './AppHeader';
 import { AppSidebar } from './AppSidebar';
 
+import { useTeamSocket } from '@/hooks/useTeamSocket';
+
 export const AppLayout = () => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 	const { modal, modalTeam, modalJoinTeam, modalMembers } = useSelector((state) => state.ui);
+
+	useTeamSocket();
 
 	return (
 		<div className='flex min-h-screen bg-background'>
