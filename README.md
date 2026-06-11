@@ -65,8 +65,3 @@ La app estará disponible en `http://localhost:3000`.
 npm run build
 npm run preview
 ```
-
-## Links
-
-[![portfolio](https://img.shields.io/badge/my_portfolio-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://juancode.vercel.app/)
-[![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/juan-david-morales-paredes-617342224/)
