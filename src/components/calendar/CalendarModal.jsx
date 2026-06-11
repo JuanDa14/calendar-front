@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
-import { CalendarPlus, Loader2, X } from 'lucide-react';
+import { CalendarPlus, Loader2, Trash2, X } from 'lucide-react';
 
 import { Modal } from '@/components/ui';
 import { Button } from '@/components/ui/button';
@@ -20,7 +20,7 @@ import {
 import { DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { eventSchema } from '@/lib/validations/auth';
 import { useEventPermissions } from '@/hooks/useEventPermissions';
-import { createNote, updateNote } from '@/redux';
+import { createNote, deleteNote, updateNote } from '@/redux';
 import { closeModal } from '@/redux/slices/uiSlice';
 
 const toDateInput = (value) => {
@@ -33,7 +33,7 @@ const toDateInput = (value) => {
 export const CalendarModal = () => {
 	const dispatch = useDispatch();
 	const { note, loading } = useSelector((state) => state.note);
-	const { canEdit } = useEventPermissions(note._id, note.userId);
+	const { canEdit, canDelete } = useEventPermissions(note._id, note.userId);
 
 	const form = useForm({
 		resolver: zodResolver(eventSchema),
@@ -167,21 +167,35 @@ export const CalendarModal = () => {
 							)}
 						/>
 
-						<div className='flex gap-3 pt-2'>
-							<Button
-								type='button'
-								variant='outline'
-								className='flex-1'
-								disabled={loading}
-								onClick={() => dispatch(closeModal())}
-							>
-								<X className='h-4 w-4' />
-								Cancelar
-							</Button>
-							<Button type='submit' className='flex-1' disabled={isDisabled}>
-								{loading && <Loader2 className='h-4 w-4 animate-spin' />}
-								{note._id ? 'Actualizar' : 'Crear'}
-							</Button>
+						<div className='flex flex-col gap-3 pt-2'>
+							<div className='flex gap-3'>
+								<Button
+									type='button'
+									variant='outline'
+									className='flex-1'
+									disabled={loading}
+									onClick={() => dispatch(closeModal())}
+								>
+									<X className='h-4 w-4' />
+									Cancelar
+								</Button>
+								<Button type='submit' className='flex-1' disabled={isDisabled}>
+									{loading && <Loader2 className='h-4 w-4 animate-spin' />}
+									{note._id ? 'Actualizar' : 'Crear'}
+								</Button>
+							</div>
+							{note._id && canDelete && (
+								<Button
+									type='button'
+									variant='destructive'
+									className='w-full'
+									disabled={loading}
+									onClick={() => dispatch(deleteNote(note._id))}
+								>
+									<Trash2 className='h-4 w-4' />
+									Eliminar evento
+								</Button>
+							)}
 						</div>
 					</form>
 				</Form>
