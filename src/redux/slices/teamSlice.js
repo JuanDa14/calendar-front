@@ -8,6 +8,8 @@ const initialState = {
 	loading: false,
 	searching: false,
 	searchResults: [],
+	searchingTeams: false,
+	teamSearchResults: [],
 };
 
 export const teamSlice = createSlice({
@@ -53,6 +55,22 @@ export const teamSlice = createSlice({
 			state.searchResults = [];
 		},
 
+		startSearchingTeams: (state) => {
+			state.searchingTeams = true;
+		},
+
+		finishSearchingTeams: (state) => {
+			state.searchingTeams = false;
+		},
+
+		setTeamSearchResults: (state, action) => {
+			state.teamSearchResults = action.payload;
+		},
+
+		clearTeamSearchResults: (state) => {
+			state.teamSearchResults = [];
+		},
+
 		clearMembers: (state) => {
 			state.members = [];
 		},
@@ -67,6 +85,7 @@ export const teamSlice = createSlice({
 			state.members = [];
 			state.description = '';
 			state.searchResults = [];
+			state.teamSearchResults = [];
 		},
 	},
 });
@@ -83,6 +102,10 @@ export const {
 	setTeamDescription,
 	setSearchResults,
 	clearSearchResults,
+	startSearchingTeams,
+	finishSearchingTeams,
+	setTeamSearchResults,
+	clearTeamSearchResults,
 	resetTeam,
 } = teamSlice.actions;
 

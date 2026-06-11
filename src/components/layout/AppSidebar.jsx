@@ -17,7 +17,7 @@ import { ThemeToggle } from '@/components/theme-toggle';
 import { openModalMembers, setCommandOpen } from '@/redux/slices/uiSlice';
 import { UserAvatar } from '@/components/ui/user-avatar';
 import { logoutUser } from '@/redux';
-import { openCreateTeamModal } from '@/redux/thunks/team';
+import { openCreateTeamModal, openJoinTeamModal } from '@/redux/thunks/team';
 
 export const AppSidebar = ({ open, onClose }) => {
 	const dispatch = useDispatch();
@@ -153,14 +153,27 @@ export const AppSidebar = ({ open, onClose }) => {
 						)}
 					</>
 				) : (
-					<Button
-						variant='ghost'
-						className='w-full justify-start gap-2'
-						onClick={handleTeam}
-					>
-						<UserPlus className='size-4' />
-						Crear equipo
-					</Button>
+					<>
+						<Button
+							variant='ghost'
+							className='w-full justify-start gap-2'
+							onClick={handleTeam}
+						>
+							<UserPlus className='size-4' />
+							Crear equipo
+						</Button>
+						<Button
+							variant='ghost'
+							className='w-full justify-start gap-2'
+							onClick={() => {
+								dispatch(openJoinTeamModal());
+								onClose?.();
+							}}
+						>
+							<Users className='size-4' />
+							Unirse a un equipo
+						</Button>
+					</>
 				)}
 
 				{hasTeam && (

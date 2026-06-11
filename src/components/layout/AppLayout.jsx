@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 
-import { CalendarModal, MembersModal, TeamModal } from '@/components';
+import { CalendarModal, JoinTeamModal, MembersModal, TeamModal } from '@/components';
 import { AppHeader } from './AppHeader';
 import { AppSidebar } from './AppSidebar';
 
 export const AppLayout = () => {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
-	const { modal, modalTeam, modalMembers } = useSelector((state) => state.ui);
+	const { modal, modalTeam, modalJoinTeam, modalMembers } = useSelector((state) => state.ui);
 
 	return (
 		<div className='flex min-h-screen bg-background'>
@@ -20,6 +20,7 @@ export const AppLayout = () => {
 
 			{modal && <CalendarModal />}
 			{modalTeam && <TeamModal />}
+			{modalJoinTeam && <JoinTeamModal />}
 			{modalMembers && <MembersModal />}
 		</div>
 	);

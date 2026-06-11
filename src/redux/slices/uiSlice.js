@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
 	modal: false,
 	modalTeam: false,
+	modalJoinTeam: false,
 	modalMembers: false,
 	teamModalTab: 'members',
 	commandOpen: false,
@@ -27,6 +28,15 @@ export const uiSlice = createSlice({
 		closeModalTeam: (state) => {
 			state.modalTeam = false;
 		},
+
+		openModalJoinTeam: (state) => {
+			state.modalJoinTeam = true;
+		},
+
+		closeModalJoinTeam: (state) => {
+			state.modalJoinTeam = false;
+		},
+
 		openModalMembers: (state, action) => {
 			state.modalMembers = true;
 			state.teamModalTab = action.payload || 'members';
@@ -51,6 +61,8 @@ export const {
 	closeModal,
 	openModalTeam,
 	closeModalTeam,
+	openModalJoinTeam,
+	closeModalJoinTeam,
 	openModalMembers,
 	closeModalMembers,
 	setCommandOpen,

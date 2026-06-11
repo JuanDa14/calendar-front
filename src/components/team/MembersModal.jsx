@@ -21,7 +21,7 @@ import { Separator } from '@/components/ui/separator';
 import { UserAvatar } from '@/components/ui/user-avatar';
 import { cn } from '@/lib/utils';
 import { closeModalMembers } from '@/redux/slices/uiSlice';
-import { deleteMember, deleteTeam, updateTeam } from '@/redux/thunks/team';
+import { deleteMember, deleteTeam, leaveTeam, updateTeam } from '@/redux/thunks/team';
 import { MemberSearch } from './MemberSearch';
 
 export const MembersModal = () => {
@@ -217,7 +217,18 @@ export const MembersModal = () => {
 							)}
 						</ModalSection>
 
-						<div className='flex justify-end'>
+						<div className='flex flex-col-reverse gap-2 sm:flex-row sm:justify-between'>
+							{!isOwner && (
+								<Button
+									type='button'
+									variant='destructive'
+									disabled={loading}
+									onClick={() => dispatch(leaveTeam())}
+								>
+									<UserMinus className='size-4' />
+									Abandonar equipo
+								</Button>
+							)}
 							<Button variant='outline' onClick={() => dispatch(closeModalMembers())}>
 								<X className='size-4' />
 								Cerrar

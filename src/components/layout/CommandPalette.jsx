@@ -23,7 +23,7 @@ import {
 	toggleCommandOpen,
 } from '@/redux/slices/uiSlice';
 import { logoutUser } from '@/redux';
-import { openCreateTeamModal } from '@/redux/thunks/team';
+import { openCreateTeamModal, openJoinTeamModal } from '@/redux/thunks/team';
 
 export const CommandPalette = () => {
 	const dispatch = useDispatch();
@@ -79,6 +79,12 @@ export const CommandPalette = () => {
 						<Users className='size-4' />
 						{team ? 'Ver miembros' : 'Crear equipo'}
 					</CommandItem>
+					{!team && (
+						<CommandItem onSelect={() => run(() => dispatch(openJoinTeamModal()))}>
+							<Users className='size-4' />
+							Unirse a un equipo
+						</CommandItem>
+					)}
 					{team && !isOwner && (
 						<CommandItem onSelect={() => run(() => dispatch(openCreateTeamModal()))}>
 							<Users className='size-4' />

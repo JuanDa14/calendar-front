@@ -19,18 +19,22 @@ import {
 	addMember,
 	clearMembers,
 	clearSearchResults,
+	clearTeamSearchResults,
 	finishLoading,
 	finishSearching,
+	finishSearchingTeams,
 	removeMember,
 	resetTeam,
 	setOwnerAndMembers,
 	setSearchResults,
+	setTeamSearchResults,
 	setTeamDescription,
 	startLoading,
 	startSearching,
+	startSearchingTeams,
 } from '../slices/teamSlice';
 
-import { closeModalTeam, openModalTeam } from '../slices/uiSlice';
+import { closeModalJoinTeam, closeModalMembers, closeModalTeam, openModalJoinTeam, openModalTeam } from '../slices/uiSlice';
 
 export const openCreateTeamModal = () => (dispatch) => {
 	dispatch(clearSearchResults());
@@ -45,6 +49,107 @@ export const closeCreateTeamModal = () => async (dispatch, getState) => {
 	if (team) {
 		await dispatch(getMembersAndEvents());
 	}
+};
+
+export const openJoinTeamModal = () => (dispatch) => {
+	dispatch(clearTeamSearchResults());
+	dispatch(openModalJoinTeam());
+};
+
+export const closeJoinTeamModal = () => (dispatch) => {
+	dispatch(clearTeamSearchResults());
+	dispatch(closeModalJoinTeam());
+};
+
+export const searchTeams = (query) => async (dispatch) => {
+	const trimmed = query?.trim();
+
+	if (!trimmed || trimmed.length < 2) {
+		dispatch(clearTeamSearchResults());
+		return;
+	}
+
+	dispatch(startSearchingTeams());
+
+	const data = await postTeamService({
+		endpoint: '/search/team',
+		body: { query: trimmed },
+	});
+
+	if (data.ok) {
+		dispatch(setTeamSearchResults(data.equipos || []));
+	} else {
+		dispatch(clearTeamSearchResults());
+	}
+
+	dispatch(finishSearchingTeams());
+};
+
+export const joinTeam = (teamId, teamName) => async (dispatch) => {
+	const { isConfirmed } = await showCustomMessageWithConfirm(
+		'question',
+		`¿Unirte al equipo "${teamName}"?`,
+		'Tus eventos personales pasarán al calendario compartido del equipo.',
+		'Sí, unirme',
+		'Cancelar'
+	);
+
+	if (!isConfirmed) return;
+
+	dispatch(startLoading());
+
+	const data = await postTeamService({
+		endpoint: `/join/${teamId}`,
+		body: {},
+	});
+
+	if (data.ok) {
+		dispatch(setNameTeam(data.team.name));
+		dispatch(
+			setOwnerAndMembers({
+				...data.team,
+				id: data.team.id,
+				description: data.team.description,
+			})
+		);
+		await dispatch(getMembersAndEvents());
+		dispatch(closeJoinTeamModal());
+		showSuccessMessage(data.message || 'Te uniste al equipo correctamente');
+	}
+
+	dispatch(finishLoading());
+};
+
+export const leaveTeam = () => async (dispatch, getState) => {
+	const { team } = getState().auth.user;
+
+	const { isConfirmed } = await showCustomMessageWithConfirm(
+		'question',
+		`¿Abandonar el equipo "${team}"?`,
+		'Tus eventos dejarán de mostrarse en el calendario del equipo.',
+		'Sí, abandonar',
+		'Cancelar'
+	);
+
+	if (!isConfirmed) return;
+
+	dispatch(startLoading());
+
+	const data = await postTeamService({
+		endpoint: '/leave',
+		body: {},
+	});
+
+	if (data.ok) {
+		dispatch(clearTeam());
+		dispatch(resetTeam());
+		dispatch(clearNotes());
+		dispatch(clearNote());
+		dispatch(closeModalMembers());
+		showSuccessMessage(data.message || 'Has abandonado el equipo');
+	}
+
+	dispatch(finishLoading());
 };
 
 export const createTeam = (values) => async (dispatch, getState) => {
