@@ -1,17 +1,18 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { forgotPassword } from '../redux';
+import { motion } from 'framer-motion';
+import { Mail } from 'lucide-react';
 
-const initialState = {
-	email: '',
-};
+import { AuthLayout } from '@/components/auth/AuthLayout';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { forgotPassword } from '@/redux';
 
 const ForgotPasswordPage = () => {
 	const dispatch = useDispatch();
-
-	const [values, setValues] = useState(initialState);
-
+	const [values, setValues] = useState({ email: '' });
 	const { checking } = useSelector((state) => state.auth);
 
 	const onSubmit = (e) => {
@@ -20,76 +21,48 @@ const ForgotPasswordPage = () => {
 	};
 
 	return (
-		<div className='container h-screen mx-auto'>
-			<div className='flex h-full justify-center items-center px-6'>
-				<div className='w-full xl:w-3/4 lg:w-11/12 flex shadow'>
-					<div
-						className='w-full h-auto bg-gray-400 hidden lg:block lg:w-1/2 bg-cover rounded-l-lg'
-						style={{
-							backgroundImage: `url('https://source.unsplash.com/oWTW-jNGl9I/600x800')`,
-						}}
-					></div>
-					<div className='w-full lg:w-1/2 bg-white p-5 rounded-lg lg:rounded-l-none'>
-						<div className='px-8 text-center'>
-							<h3 className='pt-4 mb-2 text-step-2 capitalize font-bold'>
-								Recupera tu cuenta
-							</h3>
-							<p className='mb-4 text-sm text-gray-700'>
-								Simplemente ingrese su dirección de correo electrónico a continuación y le
-								enviaremos un enlace para restablecer su contraseña!
-							</p>
-						</div>
-						<form className='px-8 pt-2 pb-8 mb-4 bg-white rounded' onSubmit={onSubmit}>
-							<div className='mb-4'>
-								<label
-									className='block mb-2 text-sm font-bold text-gray-700'
-									htmlFor='email'
-								>
-									Correo electrónico
-								</label>
-								<input
-									className='w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow-sm appearance-none focus:shadow-outline'
-									id='email'
-									type='email'
-									placeholder='Ingresa tu correo electrónico...'
-									onChange={(e) => setValues({ ...values, email: e.target.value })}
-									value={values.email}
-									name='email'
-									required
-								/>
-							</div>
-							<div className='mb-6 text-center'>
-								<button
-									disabled={checking}
-									className='w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:shadow-outline'
-									type='submit'
-								>
-									{checking ? 'Enviando...' : 'Enviar correo electrónico'}
-								</button>
-							</div>
-							<hr className='mb-6 border-t' />
-							<div className='text-center'>
-								<Link
-									to={'/auth/register'}
-									className='inline-block text-sm text-blue-500 align-baseline
-										hover:text-blue-800'
-								>
-									Crear una cuenta
-								</Link>
-							</div>
-							<div className='text-center'>
-								<Link
-									to='/auth/login'
-									className='inline-block text-sm text-blue-500 align-baseline hover:text-blue-800'
-								>
-									¿Ya tienes una cuenta? Inicia sesión!
-								</Link>
-							</div>
-						</form>
-					</div>
+		<AuthLayout
+			title='Recupera tu cuenta'
+			subtitle='Ingresa tu correo y te enviaremos un enlace para restablecer tu contraseña'
+		>
+			<motion.form
+				initial={{ opacity: 0 }}
+				animate={{ opacity: 1 }}
+				transition={{ delay: 0.2 }}
+				onSubmit={onSubmit}
+				className='space-y-5'
+			>
+				<div className='space-y-2'>
+					<Label htmlFor='email'>Correo electrónico</Label>
+					<Input
+						id='email'
+						type='email'
+						placeholder='tu@email.com'
+						required
+						value={values.email}
+						onChange={(e) => setValues({ ...values, email: e.target.value })}
+					/>
 				</div>
-			</div>
-		</div>
+
+				<Button type='submit' className='w-full' size='lg' disabled={checking}>
+					<Mail className='h-4 w-4' />
+					{checking ? 'Enviando...' : 'Enviar correo electrónico'}
+				</Button>
+
+				<div className='space-y-3 pt-2 text-center text-sm'>
+					<p>
+						<Link to='/auth/register' className='text-primary hover:underline font-medium'>
+							Crear una cuenta
+						</Link>
+					</p>
+					<p>
+						<Link to='/auth/login' className='text-muted-foreground hover:text-primary transition-colors'>
+							¿Ya tienes cuenta? Inicia sesión
+						</Link>
+					</p>
+				</div>
+			</motion.form>
+		</AuthLayout>
 	);
 };
 
