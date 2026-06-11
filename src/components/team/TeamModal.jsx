@@ -90,7 +90,7 @@ export const TeamModal = () => {
 
 					<ModalSection
 						title='Invitar miembros'
-						description='Busca usuarios por nombre o email. Los resultados se filtran mientras escribes.'
+						description='Busca usuarios, selecciona varios y agrégalos de una vez.'
 					>
 						<MemberSearch />
 					</ModalSection>

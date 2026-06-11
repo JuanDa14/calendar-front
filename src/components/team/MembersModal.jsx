@@ -157,7 +157,7 @@ export const MembersModal = () => {
 						{isOwner && (
 							<ModalSection
 								title='Agregar miembros'
-								description='Busca por nombre o email. Los resultados aparecen en tiempo real.'
+								description='Busca usuarios, selecciona varios y agrégalos de una vez.'
 							>
 								<MemberSearch />
 							</ModalSection>

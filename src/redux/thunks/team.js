@@ -141,6 +141,69 @@ export const addedMember = (member) => (dispatch, getState) => {
 	dispatch(clearSearchResults());
 };
 
+export const addedMembers = (membersToAdd) => (dispatch, getState) => {
+	const { members } = getState().team;
+	const { uid } = getState().auth.user;
+	const existingIds = new Set(members.map((m) => m._id));
+
+	const toAdd = membersToAdd.filter(
+		(member) => member._id !== uid && !existingIds.has(member._id)
+	);
+
+	if (toAdd.length === 0) {
+		showErrorMessage('Los usuarios seleccionados ya están en el equipo');
+		return;
+	}
+
+	toAdd.forEach((member) => dispatch(addMember(member)));
+	showSuccessMessage(
+		`${toAdd.length} miembro${toAdd.length !== 1 ? 's' : ''} agregado${toAdd.length !== 1 ? 's' : ''}`
+	);
+};
+
+export const saveAddedMembers = (users) => async (dispatch, getState) => {
+	const { id } = getState().team;
+	const count = users.length;
+
+	if (count === 0) return;
+
+	const names = users.map((user) => user.name).join(', ');
+
+	const { isConfirmed } = await showCustomMessageWithConfirm(
+		'question',
+		`¿Agregar ${count} miembro${count !== 1 ? 's' : ''} al equipo?`,
+		names,
+		'Sí, agregar',
+		'Cancelar'
+	);
+
+	if (!isConfirmed) return;
+
+	dispatch(startLoading());
+
+	let added = 0;
+
+	for (const user of users) {
+		const data = await postTeamService({
+			endpoint: `/${id}`,
+			body: { email: user.email },
+		});
+
+		if (data.ok) {
+			dispatch(addMember(data.member));
+			added++;
+		}
+	}
+
+	if (added > 0) {
+		showSuccessMessage(
+			`${added} miembro${added !== 1 ? 's' : ''} agregado${added !== 1 ? 's' : ''} correctamente`
+		);
+	}
+
+	dispatch(finishLoading());
+};
+
 export const saveAddedMember = (values) => async (dispatch, getState) => {
 	const { id } = getState().team;
 

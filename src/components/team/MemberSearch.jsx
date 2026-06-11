@@ -1,19 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Loader2, Search, UserPlus } from 'lucide-react';
+import { Check, Loader2, Search, UserPlus } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { clearSearchResults } from '@/redux/slices/teamSlice';
-import { addedMember, saveAddedMember, searchMembers } from '@/redux/thunks/team';
+import { addedMembers, saveAddedMembers, searchMembers } from '@/redux/thunks/team';
 
 export const MemberSearch = () => {
 	const dispatch = useDispatch();
 	const [query, setQuery] = useState('');
+	const [selectedIds, setSelectedIds] = useState(new Set());
 	const { searchResults, searching, members, owner, loading } = useSelector((state) => state.team);
 	const { uid } = useSelector((state) => state.auth.user);
 	const isExistingTeam = Boolean(owner?._id);
+	const isOwnerAdding = isExistingTeam && uid === owner._id;
 
 	useEffect(() => {
 		const timer = setTimeout(() => {
@@ -30,19 +32,48 @@ export const MemberSearch = () => {
 		[dispatch]
 	);
 
+	useEffect(() => {
+		setSelectedIds(new Set());
+	}, [searchResults]);
+
 	const memberIds = new Set(members.map((m) => m._id));
 	const visibleResults = searchResults.filter(
 		(user) => user._id !== uid && !memberIds.has(user._id)
 	);
 
-	const handleAdd = (user) => {
-		if (isExistingTeam && uid === owner._id) {
-			dispatch(saveAddedMember({ email: user.email }));
+	const selectedUsers = visibleResults.filter((user) => selectedIds.has(user._id));
+	const selectedCount = selectedUsers.length;
+
+	const toggleUser = (userId) => {
+		setSelectedIds((prev) => {
+			const next = new Set(prev);
+			if (next.has(userId)) {
+				next.delete(userId);
+			} else {
+				next.add(userId);
+			}
+			return next;
+		});
+	};
+
+	const toggleAll = () => {
+		if (selectedCount === visibleResults.length) {
+			setSelectedIds(new Set());
 		} else {
-			dispatch(addedMember(user));
+			setSelectedIds(new Set(visibleResults.map((user) => user._id)));
 		}
-		setQuery('');
-		dispatch(clearSearchResults());
+	};
+
+	const handleAddSelected = async () => {
+		if (selectedCount === 0) return;
+
+		if (isOwnerAdding) {
+			await dispatch(saveAddedMembers(selectedUsers));
+		} else {
+			dispatch(addedMembers(selectedUsers));
+		}
+
+		setSelectedIds(new Set());
 	};
 
 	return (
@@ -79,30 +110,83 @@ export const MemberSearch = () => {
 							No se encontraron usuarios disponibles
 						</p>
 					)}
-					<ul className='max-h-48 divide-y divide-border overflow-y-auto'>
-						{visibleResults.map((user) => (
-							<li
-								key={user._id}
-								className='flex items-center justify-between gap-3 px-3 py-2.5 transition-colors hover:bg-muted/40'
+
+					{visibleResults.length > 0 && (
+						<div className='flex items-center justify-between border-b border-border px-3 py-2'>
+							<button
+								type='button'
+								onClick={toggleAll}
+								className='text-xs font-medium text-primary hover:underline'
 							>
-								<div className='min-w-0 flex-1'>
-									<p className='truncate text-sm font-medium capitalize'>{user.name}</p>
-									<p className='truncate text-xs text-muted-foreground'>{user.email}</p>
-								</div>
-								<Button
-									type='button'
-									size='sm'
-									variant='secondary'
-									disabled={loading}
-									className='shrink-0 gap-1'
-									onClick={() => handleAdd(user)}
-								>
-									<UserPlus className='size-3.5' />
-									Agregar
-								</Button>
-							</li>
-						))}
+								{selectedCount === visibleResults.length
+									? 'Deseleccionar todos'
+									: 'Seleccionar todos'}
+							</button>
+							{selectedCount > 0 && (
+								<span className='text-xs text-muted-foreground'>
+									{selectedCount} seleccionado{selectedCount !== 1 ? 's' : ''}
+								</span>
+							)}
+						</div>
+					)}
+
+					<ul className='max-h-48 divide-y divide-border overflow-y-auto'>
+						{visibleResults.map((user) => {
+							const isSelected = selectedIds.has(user._id);
+
+							return (
+								<li key={user._id}>
+									<button
+										type='button'
+										disabled={loading}
+										onClick={() => toggleUser(user._id)}
+										className={cn(
+											'flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors hover:bg-muted/40',
+											isSelected && 'bg-muted/50'
+										)}
+									>
+										<div
+											className={cn(
+												'flex size-5 shrink-0 items-center justify-center rounded border transition-colors',
+												isSelected
+													? 'border-primary bg-primary text-primary-foreground'
+													: 'border-input bg-background'
+											)}
+										>
+											{isSelected && <Check className='size-3' />}
+										</div>
+										<div className='min-w-0 flex-1'>
+											<p className='truncate text-sm font-medium capitalize'>
+												{user.name}
+											</p>
+											<p className='truncate text-xs text-muted-foreground'>
+												{user.email}
+											</p>
+										</div>
+									</button>
+								</li>
+							);
+						})}
 					</ul>
+
+					{selectedCount > 0 && (
+						<div className='flex items-center justify-between gap-2 border-t border-border bg-muted/30 px-3 py-2.5'>
+							<p className='text-xs text-muted-foreground'>
+								{selectedCount} usuario{selectedCount !== 1 ? 's' : ''} listo
+								{selectedCount !== 1 ? 's' : ''} para agregar
+							</p>
+							<Button
+								type='button'
+								size='sm'
+								disabled={loading}
+								className='shrink-0 gap-1'
+								onClick={handleAddSelected}
+							>
+								<UserPlus className='size-3.5' />
+								Agregar seleccionados
+							</Button>
+						</div>
+					)}
 				</div>
 			)}
 
