@@ -50,7 +50,7 @@ export const createTeam = (values) => async (dispatch, getState) => {
 	const { isConfirmed } = await showCustomMessageWithConfirm(
 		'question',
 		'¿Estás seguro de crear el equipo?',
-		'Al crear el equipo tus eventos se eliminarán debido a que estarás en un equipo',
+		'Tus eventos personales pasarán al calendario del equipo',
 		'Si, crear equipo',
 		'Cancelar'
 	);
@@ -67,6 +67,7 @@ export const createTeam = (values) => async (dispatch, getState) => {
 					description: data.team.description,
 				})
 			);
+			await dispatch(getMembersAndEvents());
 			dispatch(closeModalTeam());
 			dispatch(finishLoading());
 			showSuccessMessage('Equipo creado correctamente');

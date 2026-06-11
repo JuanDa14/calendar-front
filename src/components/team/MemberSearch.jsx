@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Loader2, Search, UserPlus } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { clearSearchResults } from '@/redux/slices/teamSlice';
@@ -47,30 +46,38 @@ export const MemberSearch = () => {
 	return (
 		<div className='space-y-2'>
 			<Label htmlFor='member-search'>Buscar por nombre o email</Label>
-			<div className='relative'>
-				<Search className='pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground' />
-				<Input
+			<div
+				className={cn(
+					'flex h-10 w-full items-center gap-2 rounded-md border border-input bg-background px-3',
+					'transition-colors focus-within:ring-1 focus-within:ring-ring/30'
+				)}
+			>
+				<Search className='size-4 shrink-0 text-muted-foreground' aria-hidden='true' />
+				<input
 					id='member-search'
-					type='search'
+					type='text'
 					value={query}
 					onChange={(e) => setQuery(e.target.value)}
 					placeholder='Escribe al menos 2 caracteres...'
-					className='w-full pl-9'
 					autoComplete='off'
+					className='flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground'
 				/>
 				{searching && (
-					<Loader2 className='absolute right-3 top-1/2 size-4 -translate-y-1/2 animate-spin text-muted-foreground' />
+					<Loader2
+						className='size-4 shrink-0 animate-spin text-muted-foreground'
+						aria-label='Buscando'
+					/>
 				)}
 			</div>
 
 			{query.trim().length >= 2 && (
-				<div className='overflow-hidden rounded-lg border bg-card'>
+				<div className='overflow-hidden rounded-lg border border-border bg-card'>
 					{!searching && visibleResults.length === 0 && (
 						<p className='px-3 py-4 text-center text-sm text-muted-foreground'>
 							No se encontraron usuarios disponibles
 						</p>
 					)}
-					<ul className='max-h-48 divide-y overflow-y-auto'>
+					<ul className='max-h-48 divide-y divide-border overflow-y-auto'>
 						{visibleResults.map((user) => (
 							<li
 								key={user._id}
@@ -98,7 +105,7 @@ export const MemberSearch = () => {
 			)}
 
 			{query.trim().length > 0 && query.trim().length < 2 && (
-				<p className={cn('text-xs text-muted-foreground')}>
+				<p className='text-xs text-muted-foreground'>
 					Escribe al menos 2 caracteres para buscar
 				</p>
 			)}
