@@ -2,7 +2,12 @@ export const authFormatUser = (user) => ({
 	user: {
 		uid: user.uid,
 		name: user.name,
-		team: user.team,
+		email: user.email,
+		team: user.team ?? null,
+		avatar: user.avatar ?? null,
+		bio: user.bio ?? '',
+		phone: user.phone ?? '',
+		jobTitle: user.jobTitle ?? '',
 	},
 	verified: user.verified,
 });

@@ -5,6 +5,7 @@ const initialState = {
 	user: {},
 	verified: false,
 	checking: false,
+	profileLoading: false,
 };
 
 export const authSlice = createSlice({
@@ -39,6 +40,18 @@ export const authSlice = createSlice({
 		checkingStart: (state) => {
 			state.checking = true;
 		},
+
+		setUserProfile: (state, action) => {
+			state.user = { ...state.user, ...action.payload };
+		},
+
+		startProfileLoading: (state) => {
+			state.profileLoading = true;
+		},
+
+		finishProfileLoading: (state) => {
+			state.profileLoading = false;
+		},
 	},
 });
 
@@ -47,9 +60,12 @@ export const {
 	logout,
 	clearTeam,
 	setNameTeam,
+	setUserProfile,
 	verifiedUser,
 	checkingFinish,
 	checkingStart,
+	startProfileLoading,
+	finishProfileLoading,
 } = authSlice.actions;
 
 export default authSlice.reducer;

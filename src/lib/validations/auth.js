@@ -18,6 +18,13 @@ export const registerSchema = z
 		path: ['confirmPassword'],
 	});
 
+export const profileSchema = z.object({
+	name: z.string().min(3, 'El nombre debe tener al menos 3 caracteres'),
+	bio: z.string().max(280, 'Máximo 280 caracteres').optional(),
+	phone: z.string().max(20, 'Máximo 20 caracteres').optional(),
+	jobTitle: z.string().max(80, 'Máximo 80 caracteres').optional(),
+});
+
 export const forgotPasswordSchema = z.object({
 	email: z.string().min(1, 'El correo es obligatorio').email('Correo electrónico no válido'),
 });

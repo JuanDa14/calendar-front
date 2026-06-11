@@ -1,10 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux';
+import { Link, useLocation } from 'react-router-dom';
 import {
 	CalendarDays,
 	LogOut,
 	PanelLeftClose,
 	Search,
 	Settings2,
+	User,
 	UserPlus,
 	Users,
 } from 'lucide-react';
@@ -19,11 +21,13 @@ import {
 	openModalTeam,
 	setCommandOpen,
 } from '@/redux/slices/uiSlice';
+import { UserAvatar } from '@/components/ui/user-avatar';
 import { logoutUser } from '@/redux';
 
 export const AppSidebar = ({ open, onClose }) => {
 	const dispatch = useDispatch();
-	const { name, team, uid } = useSelector((state) => state.auth.user);
+	const location = useLocation();
+	const { name, team, uid, avatar } = useSelector((state) => state.auth.user);
 	const { members, owner, description } = useSelector((state) => state.team);
 	const hasTeam = Boolean(team);
 	const isOwner = owner?._id === uid;
@@ -90,6 +94,21 @@ export const AppSidebar = ({ open, onClose }) => {
 
 				<Separator className='my-3' />
 
+				<p className='px-2 pb-1 text-xs font-medium text-muted-foreground'>Cuenta</p>
+
+				<Button
+					variant={location.pathname === '/profile' ? 'secondary' : 'ghost'}
+					className='w-full justify-start gap-2'
+					asChild
+				>
+					<Link to='/profile' onClick={() => onClose?.()}>
+						<User className='size-4' />
+						Mi perfil
+					</Link>
+				</Button>
+
+				<Separator className='my-3' />
+
 				<p className='px-2 pb-1 text-xs font-medium text-muted-foreground'>Equipo</p>
 
 				{hasTeam ? (
@@ -141,9 +160,12 @@ export const AppSidebar = ({ open, onClose }) => {
 
 			<div className='mt-auto border-t border-sidebar-border p-3'>
 				<div className='mb-2 flex items-center gap-2 rounded-md px-2 py-1.5'>
-					<div className='flex size-8 shrink-0 items-center justify-center rounded-full bg-sidebar-primary text-xs font-medium text-sidebar-primary-foreground'>
-						{name?.charAt(0)?.toUpperCase() || 'U'}
-					</div>
+					<UserAvatar
+						name={name}
+						avatar={avatar}
+						size='sm'
+						className='bg-sidebar-primary text-sidebar-primary-foreground'
+					/>
 					<div className='min-w-0 flex-1'>
 						<p className='truncate text-sm font-medium'>{name}</p>
 						<p className='truncate text-xs text-muted-foreground'>

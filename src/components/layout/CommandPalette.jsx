@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { CalendarPlus, LogOut, Moon, Settings2, Sun, Users } from 'lucide-react';
+import { CalendarPlus, LogOut, Moon, Settings2, Sun, User, Users } from 'lucide-react';
 
 import {
 	CommandDialog,
@@ -94,6 +94,10 @@ export const CommandPalette = () => {
 				<CommandGroup heading='Navegación'>
 					<CommandItem onSelect={() => run(() => navigate('/'))}>
 						Calendario
+					</CommandItem>
+					<CommandItem onSelect={() => run(() => navigate('/profile'))}>
+						<User className='size-4' />
+						Mi perfil
 					</CommandItem>
 				</CommandGroup>
 

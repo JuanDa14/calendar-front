@@ -18,6 +18,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { ModalSection, ModalShell } from '@/components/ui/modal-shell';
 import { Separator } from '@/components/ui/separator';
+import { UserAvatar } from '@/components/ui/user-avatar';
 import { cn } from '@/lib/utils';
 import { closeModalMembers } from '@/redux/slices/uiSlice';
 import { deleteMember, deleteTeam, updateTeam } from '@/redux/thunks/team';
@@ -182,9 +183,11 @@ export const MembersModal = () => {
 											className='flex items-center justify-between gap-3 rounded-lg border bg-muted/30 px-3 py-2.5'
 										>
 											<div className='flex min-w-0 items-center gap-2.5'>
-												<div className='flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary'>
-													<User className='size-4' />
-												</div>
+												<UserAvatar
+													name={member.name}
+													avatar={member.avatar}
+													size='sm'
+												/>
 												<div className='min-w-0'>
 													<p className='truncate text-sm font-medium capitalize'>
 														{member.name}

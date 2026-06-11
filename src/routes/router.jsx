@@ -13,6 +13,7 @@ const VerifiedPage = lazy(() => import('../auth/VerifiedPage'));
 const ForgotPasswordPage = lazy(() => import('../auth/ForgotPasswordPage'));
 const ResetPasswordPage = lazy(() => import('../auth/ResetPasswordPage'));
 const CalendarPage = lazy(() => import('../pages/CalendarPage'));
+const ProfilePage = lazy(() => import('../pages/ProfilePage'));
 
 export const router = createBrowserRouter([
 	{
@@ -58,6 +59,10 @@ export const router = createBrowserRouter([
 							{
 								index: true,
 								element: <CalendarPage />,
+							},
+							{
+								path: 'profile',
+								element: <ProfilePage />,
 							},
 							{
 								path: '*',
