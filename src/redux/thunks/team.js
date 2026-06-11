@@ -17,6 +17,7 @@ import { clearTeam, setNameTeam } from '../slices/authSlice';
 import { addAllNotes, clearNote, clearNotes, deleteNotesByMemberId } from '../slices/noteSlice';
 import {
 	addMember,
+	clearMembers,
 	clearSearchResults,
 	finishLoading,
 	finishSearching,
@@ -31,9 +32,7 @@ import {
 
 import { closeModalTeam, openModalTeam } from '../slices/uiSlice';
 
-export const openCreateTeamModal = () => (dispatch, getState) => {
-	const { team } = getState().auth.user;
-
+export const openCreateTeamModal = () => (dispatch) => {
 	dispatch(clearSearchResults());
 	dispatch(clearMembers());
 	dispatch(openModalTeam());

@@ -1,7 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { Dialog, DialogContent } from './dialog';
-import { closeModal, closeModalMembers, closeModalTeam } from '@/redux/slices/uiSlice';
+import { closeModal, closeModalMembers } from '@/redux/slices/uiSlice';
 import { clearSearchResults } from '@/redux/slices/teamSlice';
+import { closeCreateTeamModal } from '@/redux/thunks/team';
 
 export const Modal = ({ children }) => {
 	const { modal, modalTeam, modalMembers } = useSelector((state) => state.ui);
@@ -13,7 +14,7 @@ export const Modal = ({ children }) => {
 		if (modal) dispatch(closeModal());
 		if (modalTeam) {
 			dispatch(clearSearchResults());
-			dispatch(closeModalTeam());
+			dispatch(closeCreateTeamModal());
 		}
 		if (modalMembers) {
 			dispatch(clearSearchResults());
