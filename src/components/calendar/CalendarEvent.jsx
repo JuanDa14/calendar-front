@@ -4,7 +4,7 @@ export const CalendarEvent = ({ event: { title, user, notes } }) => (
 	<TooltipProvider delayDuration={200}>
 		<Tooltip>
 			<TooltipTrigger asChild>
-				<div className='line-clamp-1 w-full text-left text-xs font-medium'>
+				<div className='rbc-event-content line-clamp-1 w-full text-left text-xs font-medium text-inherit'>
 					<span className='font-semibold'>{title}</span>
 					{user && <span className='opacity-80'> · {user}</span>}
 				</div>

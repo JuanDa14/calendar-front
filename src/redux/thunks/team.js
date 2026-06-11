@@ -34,7 +34,9 @@ import { closeModalTeam } from '../slices/uiSlice';
 export const createTeam = (values) => async (dispatch, getState) => {
 	dispatch(startLoading());
 
-	const { members } = getState().team;
+	const { members, owner } = getState().team;
+	const { user } = getState().auth;
+	const isMemberOfAnotherTeam = Boolean(user.team) && owner?._id !== user.uid;
 
 	const body = {
 		name: values.name,
@@ -49,8 +51,10 @@ export const createTeam = (values) => async (dispatch, getState) => {
 
 	const { isConfirmed } = await showCustomMessageWithConfirm(
 		'question',
-		'¿Estás seguro de crear el equipo?',
-		'Tus eventos personales pasarán al calendario del equipo',
+		isMemberOfAnotherTeam ? '¿Crear tu propio equipo?' : '¿Estás seguro de crear el equipo?',
+		isMemberOfAnotherTeam
+			? 'Saldrás del equipo actual y tus eventos pasarán a tu nuevo calendario de equipo'
+			: 'Tus eventos personales pasarán al calendario del equipo',
 		'Si, crear equipo',
 		'Cancelar'
 	);

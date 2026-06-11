@@ -79,6 +79,12 @@ export const CommandPalette = () => {
 						<Users className='size-4' />
 						{team ? 'Ver miembros' : 'Crear equipo'}
 					</CommandItem>
+					{team && !isOwner && (
+						<CommandItem onSelect={() => run(() => dispatch(openModalTeam()))}>
+							<Users className='size-4' />
+							Crear mi equipo
+						</CommandItem>
+					)}
 					{team && isOwner && (
 						<CommandItem
 							onSelect={() => run(() => dispatch(openModalMembers('settings')))}

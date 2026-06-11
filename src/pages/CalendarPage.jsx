@@ -16,17 +16,21 @@ const CalendarPage = () => {
 	const { user, checking } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
 
-	const eventStyleGetter = (event) => ({
-		style: {
-			backgroundColor:
-				user.uid === event.userId ? 'var(--event-own)' : 'var(--event-team)',
-			borderRadius: 'calc(var(--radius) - 2px)',
-			border: 'none',
-			color: 'var(--primary-foreground)',
-			padding: '2px 6px',
-			fontSize: '0.8rem',
-		},
-	});
+	const eventStyleGetter = (event) => {
+		const isOwn = user.uid === event.userId;
+
+		return {
+			className: isOwn ? 'rbc-event-own' : 'rbc-event-team',
+			style: {
+				backgroundColor: isOwn ? 'var(--event-own)' : 'var(--event-team)',
+				borderRadius: 'calc(var(--radius) - 2px)',
+				border: 'none',
+				color: isOwn ? 'var(--event-own-fg)' : 'var(--event-team-fg)',
+				padding: '2px 6px',
+				fontSize: '0.8rem',
+			},
+		};
+	};
 
 	const handleSelectEvent = (event) => {
 		dispatch(findNoteById(event._id));

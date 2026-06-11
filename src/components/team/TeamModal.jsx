@@ -18,7 +18,9 @@ const initialState = { name: '', description: '' };
 
 export const TeamModal = () => {
 	const dispatch = useDispatch();
-	const { members, loading } = useSelector((state) => state.team);
+	const { members, loading, owner } = useSelector((state) => state.team);
+	const { team, uid } = useSelector((state) => state.auth.user);
+	const isMemberOfAnotherTeam = Boolean(team) && owner?._id !== uid;
 	const [values, setValues] = useState(initialState);
 
 	const onSubmit = (e) => {
@@ -30,8 +32,12 @@ export const TeamModal = () => {
 		<Modal>
 			<ModalShell
 				icon={Users}
-				title='Crear equipo'
-				description='Configura tu equipo e invita miembros antes de publicarlo'
+				title={isMemberOfAnotherTeam ? 'Crear mi equipo' : 'Crear equipo'}
+				description={
+					isMemberOfAnotherTeam
+						? 'Al crear tu equipo saldrás del actual. Invita miembros antes de publicarlo.'
+						: 'Configura tu equipo e invita miembros antes de publicarlo'
+				}
 				footer={
 					<>
 						<Button type='button' variant='outline' onClick={() => dispatch(closeModalTeam())}>

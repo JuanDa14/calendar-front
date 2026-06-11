@@ -39,6 +39,11 @@ export const AppSidebar = ({ open, onClose }) => {
 		onClose?.();
 	};
 
+	const handleCreateOwnTeam = () => {
+		dispatch(openModalTeam());
+		onClose?.();
+	};
+
 	const content = (
 		<div className='flex h-full flex-col'>
 			<div className='flex h-14 items-center gap-2 border-b border-sidebar-border px-4'>
@@ -121,6 +126,16 @@ export const AppSidebar = ({ open, onClose }) => {
 							<Users className='size-4' />
 							Ver miembros
 						</Button>
+						{!isOwner && (
+							<Button
+								variant='ghost'
+								className='w-full justify-start gap-2'
+								onClick={handleCreateOwnTeam}
+							>
+								<UserPlus className='size-4' />
+								Crear mi equipo
+							</Button>
+						)}
 						{isOwner && (
 							<Button
 								variant='ghost'
@@ -169,7 +184,7 @@ export const AppSidebar = ({ open, onClose }) => {
 					<div className='min-w-0 flex-1'>
 						<p className='truncate text-sm font-medium'>{name}</p>
 						<p className='truncate text-xs text-muted-foreground'>
-							{hasTeam ? 'Miembro de equipo' : 'Sin equipo'}
+							{hasTeam ? (isOwner ? 'Propietario de equipo' : 'Miembro de equipo') : 'Sin equipo'}
 						</p>
 					</div>
 					<ThemeToggle />

@@ -39,6 +39,8 @@
 		--sidebar-ring: oklch(0.705 0.015 286.067);
 		--event-own: oklch(0.21 0.006 285.885);
 		--event-team: oklch(0.6 0.118 184.704);
+		--event-own-fg: oklch(0.985 0 0);
+		--event-team-fg: oklch(0.985 0 0);
 	}
 
 	.dark {
@@ -76,6 +78,8 @@
 		--sidebar-ring: oklch(0.552 0.016 285.938);
 		--event-own: oklch(0.92 0.004 286.32);
 		--event-team: oklch(0.696 0.17 162.48);
+		--event-own-fg: oklch(0.21 0.006 285.885);
+		--event-team-fg: oklch(0.985 0 0);
 	}
 
 	* {
@@ -230,4 +234,28 @@
 
 .rbc-agenda-event-cell {
 	@apply text-foreground;
+}
+
+.rbc-agenda-view .rbc-event {
+	background-color: transparent !important;
+	color: var(--foreground) !important;
+	box-shadow: none !important;
+	border: none !important;
+	padding: 4px 0 4px 10px !important;
+}
+
+.rbc-agenda-view .rbc-event.rbc-event-own {
+	border-left: 3px solid var(--event-own) !important;
+}
+
+.rbc-agenda-view .rbc-event.rbc-event-team {
+	border-left: 3px solid var(--event-team) !important;
+}
+
+.rbc-agenda-view .rbc-event-content {
+	color: var(--foreground) !important;
+}
+
+.rbc-agenda-view .rbc-event-label {
+	color: var(--muted-foreground) !important;
 }
