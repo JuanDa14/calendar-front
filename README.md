@@ -26,7 +26,7 @@ cd calendar-front
 npm install
 
 # Configurar variables de entorno
-# Crear .env.development con:
+# Copia .env.example a .env.local (no se sube al repo):
 # VITE_API_URL=http://localhost:4000/api
 
 # Iniciar en desarrollo
