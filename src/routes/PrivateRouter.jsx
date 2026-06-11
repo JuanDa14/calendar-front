@@ -1,10 +1,15 @@
-import { useAuthenticated } from '../hooks';
 import { Navigate, Outlet } from 'react-router-dom';
+import { useAuthenticated } from '../hooks';
+import { Spinner } from '@/components/ui/Spinner';
 
 const PrivateRouter = () => {
-	const { isAuthenticated } = useAuthenticated();
+	const { isAuthenticated, isInitializing } = useAuthenticated();
 
-	return isAuthenticated ? <Outlet /> : <Navigate to='/auth/login' />;
+	if (isInitializing) {
+		return <Spinner />;
+	}
+
+	return isAuthenticated ? <Outlet /> : <Navigate to='/auth/login' replace />;
 };
 
 export default PrivateRouter;
