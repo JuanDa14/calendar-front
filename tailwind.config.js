@@ -1,20 +1,67 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-	content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+export default {
+	darkMode: ['class'],
+	content: ['./index.html', './src/**/*.{js,jsx}'],
 	theme: {
 		extend: {
-			fontSize: {
-				'step--2': 'clamp(0.7rem, calc(0.87rem + -0.14vw), 0.84rem)',
-				'step--1': 'clamp(0.94rem, calc(0.95rem + -0.01vw), 0.94rem)',
-				'step-0': 'clamp(1.06rem, calc(1.03rem + 0.19vw), 1.25rem)',
-				'step-1': 'clamp(1.2rem, calc(1.1rem + 0.47vw), 1.67rem)',
-				'step-2': 'clamp(1.35rem, calc(1.17rem + 0.88vw), 2.22rem)',
-				'step-3': 'clamp(1.51rem, calc(1.22rem + 1.45vw), 2.96rem)',
-				'step-4': 'clamp(1.7rem, calc(1.25rem + 2.25vw), 3.95rem)',
-				'step-5': 'clamp(1.91rem, calc(1.25rem + 3.35vw), 5.26rem)',
-				'step-6': 'clamp(2.15rem, calc(1.18rem + 4.86vw), 7.01rem)',
+			fontFamily: {
+				sans: ['Inter', 'system-ui', 'sans-serif'],
+			},
+			colors: {
+				border: 'hsl(var(--border))',
+				input: 'hsl(var(--input))',
+				ring: 'hsl(var(--ring))',
+				background: 'hsl(var(--background))',
+				foreground: 'hsl(var(--foreground))',
+				primary: {
+					DEFAULT: 'hsl(var(--primary))',
+					foreground: 'hsl(var(--primary-foreground))',
+				},
+				secondary: {
+					DEFAULT: 'hsl(var(--secondary))',
+					foreground: 'hsl(var(--secondary-foreground))',
+				},
+				destructive: {
+					DEFAULT: 'hsl(var(--destructive))',
+					foreground: 'hsl(var(--destructive-foreground))',
+				},
+				muted: {
+					DEFAULT: 'hsl(var(--muted))',
+					foreground: 'hsl(var(--muted-foreground))',
+				},
+				accent: {
+					DEFAULT: 'hsl(var(--accent))',
+					foreground: 'hsl(var(--accent-foreground))',
+				},
+				popover: {
+					DEFAULT: 'hsl(var(--popover))',
+					foreground: 'hsl(var(--popover-foreground))',
+				},
+				card: {
+					DEFAULT: 'hsl(var(--card))',
+					foreground: 'hsl(var(--card-foreground))',
+				},
+			},
+			borderRadius: {
+				lg: 'var(--radius)',
+				md: 'calc(var(--radius) - 2px)',
+				sm: 'calc(var(--radius) - 4px)',
+			},
+			keyframes: {
+				'accordion-down': {
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' },
+				},
+				'accordion-up': {
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' },
+				},
+			},
+			animation: {
+				'accordion-down': 'accordion-down 0.2s ease-out',
+				'accordion-up': 'accordion-up 0.2s ease-out',
 			},
 		},
 	},
-	plugins: [],
+	plugins: [require('tailwindcss-animate')],
 };
