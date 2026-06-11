@@ -2,74 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Ejemplo de uso de line-clamp para mostrar solo la primera línea */
-.line-clamp-1 {
-	overflow: hidden;
-	display: -webkit-box;
-	-webkit-box-orient: vertical;
-	-webkit-line-clamp: 1;
+@layer base {
+	:root {
+		--background: 0 0% 100%;
+		--foreground: 222.2 84% 4.9%;
+		--card: 0 0% 100%;
+		--card-foreground: 222.2 84% 4.9%;
+		--popover: 0 0% 100%;
+		--popover-foreground: 222.2 84% 4.9%;
+		--primary: 221.2 83.2% 53.3%;
+		--primary-foreground: 210 40% 98%;
+		--secondary: 210 40% 96.1%;
+		--secondary-foreground: 222.2 47.4% 11.2%;
+		--muted: 210 40% 96.1%;
+		--muted-foreground: 215.4 16.3% 46.9%;
+		--accent: 210 40% 96.1%;
+		--accent-foreground: 222.2 47.4% 11.2%;
+		--destructive: 0 84.2% 60.2%;
+		--destructive-foreground: 210 40% 98%;
+		--border: 214.3 31.8% 91.4%;
+		--input: 214.3 31.8% 91.4%;
+		--ring: 221.2 83.2% 53.3%;
+		--radius: 0.75rem;
+	}
+
+	.dark {
+		--background: 222.2 84% 4.9%;
+		--foreground: 210 40% 98%;
+		--card: 222.2 84% 4.9%;
+		--card-foreground: 210 40% 98%;
+		--popover: 222.2 84% 4.9%;
+		--popover-foreground: 210 40% 98%;
+		--primary: 217.2 91.2% 59.8%;
+		--primary-foreground: 222.2 47.4% 11.2%;
+		--secondary: 217.2 32.6% 17.5%;
+		--secondary-foreground: 210 40% 98%;
+		--muted: 217.2 32.6% 17.5%;
+		--muted-foreground: 215 20.2% 65.1%;
+		--accent: 217.2 32.6% 17.5%;
+		--accent-foreground: 210 40% 98%;
+		--destructive: 0 62.8% 30.6%;
+		--destructive-foreground: 210 40% 98%;
+		--border: 217.2 32.6% 17.5%;
+		--input: 217.2 32.6% 17.5%;
+		--ring: 224.3 76.3% 48%;
+	}
+
+	* {
+		@apply border-border;
+	}
+
+	body {
+		@apply bg-background text-foreground font-sans antialiased;
+	}
 }
 
-button,
-li,
-input,
-a {
-	transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
-}
-
-/* Modal */
-.ReactModalPortal > div {
-	opacity: 0;
-}
-
-.ReactModalPortal .ReactModal__Overlay {
-	align-items: center;
-	display: flex;
-	justify-content: center;
-	transition: opacity 0.2s ease-in-out;
-	z-index: 999;
-}
-
-.modal-fondo {
-	background-color: rgba(0, 0, 0, 0.3);
-	bottom: 0;
-	left: 0;
-	right: 0;
-	top: 0;
-	position: fixed;
-}
-
-.ReactModalPortal .ReactModal__Overlay--after-open {
-	opacity: 1;
-}
-
-.ReactModal__Content {
-	padding: 0 !important;
-	border-radius: 1.5rem !important;
-	margin: 0 !important;
-	@apply shadow;
-}
-
-.ReactModalPortal .ReactModal__Overlay--before-close {
-	opacity: 0;
-	padding: 0;
-	border-radius: 1.5rem;
-	margin: 0;
-}
-
-.modal {
-	background: white;
-	color: rgb(51, 51, 51);
-	display: inline;
-	width: fit-content;
-	height: fit-content;
-	outline: none;
-	border-radius: 1.5rem;
-}
-
-::-webkit-scrollbar-thumb {
-	background: #3a84f5;
-	border-radius: 0.5rem;
+@layer utilities {
+	.line-clamp-1 {
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 1;
+	}
 }
 
 ::-webkit-scrollbar {
@@ -77,11 +71,45 @@ a {
 }
 
 ::-webkit-scrollbar-track {
-	background: #1b1b2f;
+	@apply bg-muted;
 }
 
-@media screen and (max-width: 768px) {
-	.ReactModal__Content {
-		width: 90%;
-	}
+::-webkit-scrollbar-thumb {
+	@apply bg-primary/60 rounded-full;
+}
+
+.rbc-calendar {
+	@apply bg-card text-card-foreground;
+}
+
+.rbc-toolbar button {
+	@apply text-foreground border-border hover:bg-accent;
+}
+
+.rbc-header {
+	@apply border-border text-muted-foreground font-medium py-2;
+}
+
+.rbc-today {
+	@apply bg-primary/5;
+}
+
+.rbc-off-range-bg {
+	@apply bg-muted/30;
+}
+
+.rbc-event {
+	@apply shadow-sm;
+}
+
+.rbc-month-view,
+.rbc-time-view,
+.rbc-agenda-view {
+	@apply border-border;
+}
+
+.rbc-day-bg + .rbc-day-bg,
+.rbc-month-row + .rbc-month-row,
+.rbc-timeslot-group {
+	@apply border-border;
 }
