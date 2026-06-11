@@ -5,6 +5,7 @@ const initialState = {
 	modalTeam: false,
 	modalMembers: false,
 	teamModalTab: 'members',
+	commandOpen: false,
 };
 
 export const uiSlice = createSlice({
@@ -34,6 +35,14 @@ export const uiSlice = createSlice({
 			state.modalMembers = false;
 			state.teamModalTab = 'members';
 		},
+
+		setCommandOpen: (state, action) => {
+			state.commandOpen = action.payload;
+		},
+
+		toggleCommandOpen: (state) => {
+			state.commandOpen = !state.commandOpen;
+		},
 	},
 });
 
@@ -44,6 +53,8 @@ export const {
 	closeModalTeam,
 	openModalMembers,
 	closeModalMembers,
+	setCommandOpen,
+	toggleCommandOpen,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

@@ -2,13 +2,13 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { format } from 'date-fns';
 import { CalendarPlus, Loader2, Trash2, X } from 'lucide-react';
 
 import { Modal } from '@/components/ui';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { DatePicker } from '@/components/ui/date-picker';
 import {
 	Form,
 	FormControl,
@@ -22,13 +22,6 @@ import { eventSchema } from '@/lib/validations/auth';
 import { useEventPermissions } from '@/hooks/useEventPermissions';
 import { createNote, deleteNote, updateNote } from '@/redux';
 import { closeModal } from '@/redux/slices/uiSlice';
-
-const toDateInput = (value) => {
-	if (!value) return '';
-	const date = value instanceof Date ? value : new Date(value);
-	if (Number.isNaN(date.getTime())) return '';
-	return format(date, 'yyyy-MM-dd');
-};
 
 export const CalendarModal = () => {
 	const dispatch = useDispatch();
@@ -70,12 +63,12 @@ export const CalendarModal = () => {
 
 	return (
 		<Modal>
-			<div className='w-full max-w-md p-6'>
-				<div className='mb-6 flex items-start gap-4'>
-					<div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary'>
-						<CalendarPlus className='h-6 w-6' aria-hidden='true' />
+			<div className='w-full p-6'>
+				<div className='mb-6 flex items-start gap-4 pr-8'>
+					<div className='flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary'>
+						<CalendarPlus className='size-6' aria-hidden='true' />
 					</div>
-					<div className='space-y-1'>
+					<div className='min-w-0 flex-1 space-y-1'>
 						<DialogTitle>{note._id ? 'Actualizar evento' : 'Nuevo evento'}</DialogTitle>
 						<DialogDescription>
 							{note._id
@@ -91,7 +84,7 @@ export const CalendarModal = () => {
 							control={form.control}
 							name='title'
 							render={({ field }) => (
-								<FormItem>
+								<FormItem className='w-full'>
 									<FormLabel>Título</FormLabel>
 									<FormControl>
 										<Input
@@ -106,20 +99,19 @@ export const CalendarModal = () => {
 							)}
 						/>
 
-						<div className='grid gap-4 sm:grid-cols-2'>
+						<div className='grid w-full gap-4 sm:grid-cols-2'>
 							<FormField
 								control={form.control}
 								name='start'
 								render={({ field }) => (
-									<FormItem>
+									<FormItem className='w-full'>
 										<FormLabel>Inicio</FormLabel>
 										<FormControl>
-											<Input
-												type='date'
-												className='w-full'
+											<DatePicker
+												value={field.value}
+												onChange={field.onChange}
 												disabled={isDisabled}
-												value={toDateInput(field.value)}
-												onChange={(e) => field.onChange(new Date(e.target.value))}
+												placeholder='Fecha de inicio'
 											/>
 										</FormControl>
 										<FormMessage />
@@ -130,15 +122,14 @@ export const CalendarModal = () => {
 								control={form.control}
 								name='end'
 								render={({ field }) => (
-									<FormItem>
+									<FormItem className='w-full'>
 										<FormLabel>Fin</FormLabel>
 										<FormControl>
-											<Input
-												type='date'
-												className='w-full'
+											<DatePicker
+												value={field.value}
+												onChange={field.onChange}
 												disabled={isDisabled}
-												value={toDateInput(field.value)}
-												onChange={(e) => field.onChange(new Date(e.target.value))}
+												placeholder='Fecha de fin'
 											/>
 										</FormControl>
 										<FormMessage />
@@ -151,7 +142,7 @@ export const CalendarModal = () => {
 							control={form.control}
 							name='notes'
 							render={({ field }) => (
-								<FormItem>
+								<FormItem className='w-full'>
 									<FormLabel>Descripción</FormLabel>
 									<FormControl>
 										<Textarea
@@ -176,11 +167,11 @@ export const CalendarModal = () => {
 									disabled={loading}
 									onClick={() => dispatch(closeModal())}
 								>
-									<X className='h-4 w-4' />
+									<X className='size-4' />
 									Cancelar
 								</Button>
 								<Button type='submit' className='flex-1' disabled={isDisabled}>
-									{loading && <Loader2 className='h-4 w-4 animate-spin' />}
+									{loading && <Loader2 className='size-4 animate-spin' />}
 									{note._id ? 'Actualizar' : 'Crear'}
 								</Button>
 							</div>
@@ -192,7 +183,7 @@ export const CalendarModal = () => {
 									disabled={loading}
 									onClick={() => dispatch(deleteNote(note._id))}
 								>
-									<Trash2 className='h-4 w-4' />
+									<Trash2 className='size-4' />
 									Eliminar evento
 								</Button>
 							)}

@@ -24,7 +24,7 @@ export const TeamModal = () => {
 
 	return (
 		<Modal>
-			<div className='w-full max-w-md p-6'>
+			<div className='w-full p-6'>
 				<div className='mb-6 flex items-start gap-4'>
 					<div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary'>
 						<Users className='h-6 w-6' />

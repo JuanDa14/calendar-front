@@ -3,6 +3,7 @@ import {
 	CalendarDays,
 	LogOut,
 	PanelLeftClose,
+	Search,
 	Settings2,
 	UserPlus,
 	Users,
@@ -16,6 +17,7 @@ import {
 	openModal,
 	openModalMembers,
 	openModalTeam,
+	setCommandOpen,
 } from '@/redux/slices/uiSlice';
 import { logoutUser } from '@/redux';
 
@@ -72,6 +74,18 @@ export const AppSidebar = ({ open, onClose }) => {
 				>
 					<CalendarDays className='size-4' />
 					Calendario
+				</Button>
+
+				<Button
+					variant='ghost'
+					className='w-full justify-start gap-2'
+					onClick={() => {
+						dispatch(setCommandOpen(true));
+						onClose?.();
+					}}
+				>
+					<Search className='size-4' />
+					Buscar acciones
 				</Button>
 
 				<Separator className='my-3' />

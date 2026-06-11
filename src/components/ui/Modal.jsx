@@ -23,7 +23,7 @@ export const Modal = ({ children }) => {
 
 	return (
 		<Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-			<DialogContent className='max-w-2xl max-h-[90vh] overflow-y-auto p-0 sm:rounded-2xl'>
+			<DialogContent className='w-[calc(100%-2rem)] max-w-lg gap-0 overflow-y-auto p-0 sm:rounded-xl'>
 				{children}
 			</DialogContent>
 		</Dialog>
