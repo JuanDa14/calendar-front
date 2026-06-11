@@ -1,4 +1,9 @@
-import { deleteTeamService, getTeamService, postTeamService } from '../../services';
+import {
+	deleteTeamService,
+	getTeamService,
+	postTeamService,
+	updateTeamService,
+} from '../../services';
 import {
 	fomartEvent,
 	showAddedMemberMessageWithConfirm,
@@ -18,6 +23,7 @@ import {
 	resetTeam,
 	setMember,
 	setOwnerAndMembers,
+	setTeamDescription,
 	startLoading,
 } from '../slices/teamSlice';
 
@@ -52,7 +58,13 @@ export const createTeam = (values) => async (dispatch, getState) => {
 
 		if (data.ok) {
 			dispatch(setNameTeam(data.team.name));
-			dispatch(setOwnerAndMembers(data.team));
+			dispatch(
+				setOwnerAndMembers({
+					...data.team,
+					id: data.team.id,
+					description: data.team.description,
+				})
+			);
 			dispatch(closeModalTeam());
 			dispatch(finishLoading());
 			showSuccessMessage('Equipo creado correctamente');
@@ -163,15 +175,37 @@ export const getMembersAndEvents = () => async (dispatch) => {
 	const data = await getTeamService(options);
 
 	if (data.ok) {
-		const events = fomartEvent(data.eventos.events);
+		const events = fomartEvent(data.eventos.events || []);
 		dispatch(addAllNotes(events));
 		dispatch(
 			setOwnerAndMembers({
 				members: data.eventos.members,
 				owner: data.eventos.owner,
 				id: data.eventos._id,
+				description: data.eventos.description || '',
 			})
 		);
+	}
+
+	dispatch(finishLoading());
+};
+
+export const updateTeam = (values) => async (dispatch, getState) => {
+	const { id } = getState().team;
+
+	dispatch(startLoading());
+
+	const options = {
+		endpoint: `/${id}`,
+		body: values,
+	};
+
+	const data = await updateTeamService(options);
+
+	if (data.ok) {
+		dispatch(setNameTeam(data.team.name));
+		dispatch(setTeamDescription(data.team.description || ''));
+		showSuccessMessage('Equipo actualizado correctamente');
 	}
 
 	dispatch(finishLoading());

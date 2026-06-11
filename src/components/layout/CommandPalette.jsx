@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { CalendarPlus, LogOut, Moon, Sun, Users } from 'lucide-react';
+import { CalendarPlus, LogOut, Moon, Settings2, Sun, Users } from 'lucide-react';
 
 import {
 	CommandDialog,
@@ -23,7 +23,9 @@ export const CommandPalette = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const { theme, setTheme } = useTheme();
-	const { members } = useSelector((state) => state.team);
+	const { members, owner } = useSelector((state) => state.team);
+	const { team, uid } = useSelector((state) => state.auth.user);
+	const isOwner = owner?._id === uid;
 
 	useEffect(() => {
 		const onKeyDown = (e) => {
@@ -62,15 +64,23 @@ export const CommandPalette = () => {
 					<CommandItem
 						onSelect={() =>
 							run(() =>
-								members.length > 0
+								team
 									? dispatch(openModalMembers())
 									: dispatch(openModalTeam())
 							)
 						}
 					>
 						<Users className='h-4 w-4' />
-						{members.length > 0 ? 'Ver miembros' : 'Crear equipo'}
+						{team ? 'Ver miembros' : 'Crear equipo'}
 					</CommandItem>
+					{team && isOwner && (
+						<CommandItem
+							onSelect={() => run(() => dispatch(openModalMembers('settings')))}
+						>
+							<Settings2 className='h-4 w-4' />
+							Editar equipo
+						</CommandItem>
+					)}
 				</CommandGroup>
 
 				<CommandSeparator />

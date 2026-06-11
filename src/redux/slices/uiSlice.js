@@ -4,6 +4,7 @@ const initialState = {
 	modal: false,
 	modalTeam: false,
 	modalMembers: false,
+	teamModalTab: 'members',
 };
 
 export const uiSlice = createSlice({
@@ -25,11 +26,13 @@ export const uiSlice = createSlice({
 		closeModalTeam: (state) => {
 			state.modalTeam = false;
 		},
-		openModalMembers: (state) => {
+		openModalMembers: (state, action) => {
 			state.modalMembers = true;
+			state.teamModalTab = action.payload || 'members';
 		},
 		closeModalMembers: (state) => {
 			state.modalMembers = false;
+			state.teamModalTab = 'members';
 		},
 	},
 });

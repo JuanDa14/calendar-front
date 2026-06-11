@@ -4,6 +4,7 @@ const initialState = {
 	id: null,
 	owner: {},
 	members: [],
+	description: '',
 	loading: false,
 	showMembers: [],
 };
@@ -28,6 +29,11 @@ export const teamSlice = createSlice({
 			state.members = action.payload.members;
 			state.owner = action.payload.owner;
 			state.id = action.payload.id;
+			state.description = action.payload.description || '';
+		},
+
+		setTeamDescription: (state, action) => {
+			state.description = action.payload;
 		},
 
 		setMember: (state, action) => {
@@ -50,6 +56,7 @@ export const teamSlice = createSlice({
 			state.id = null;
 			state.owner = {};
 			state.members = [];
+			state.description = '';
 			state.showMembers = [];
 		},
 	},
@@ -63,6 +70,7 @@ export const {
 	clearMembers,
 	removeMember,
 	setOwnerAndMembers,
+	setTeamDescription,
 	resetTeam,
 	clearShowMembers,
 } = teamSlice.actions;
