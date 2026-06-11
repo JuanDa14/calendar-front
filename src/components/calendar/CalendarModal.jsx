@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { startOfDay } from 'date-fns';
 import { CalendarPlus, Loader2, Trash2, X } from 'lucide-react';
 
 import { Modal } from '@/components/ui';
@@ -39,6 +40,11 @@ export const CalendarModal = () => {
 		},
 	});
 
+	const startDate = form.watch('start');
+	const today = startOfDay(new Date());
+	const endMinDate =
+		startDate && startOfDay(startDate) > today ? startOfDay(startDate) : today;
+
 	useEffect(() => {
 		if (note._id || note.start) {
 			form.reset({
@@ -73,37 +79,34 @@ export const CalendarModal = () => {
 						: 'Completa los campos para programar un nuevo evento'
 				}
 				footer={
-					<>
+					<div className='flex w-full flex-wrap items-center gap-2'>
 						{note._id && canDelete && (
 							<Button
 								type='button'
 								variant='destructive'
 								disabled={loading}
 								onClick={() => dispatch(deleteNote(note._id))}
-								className='mr-auto w-full sm:w-auto'
 							>
 								<Trash2 className='size-4' />
 								Eliminar
 							</Button>
 						)}
-						<Button
-							type='button'
-							variant='outline'
-							disabled={loading}
-							onClick={() => dispatch(closeModal())}
-						>
-							<X className='size-4' />
-							Cancelar
-						</Button>
-						<Button
-							type='submit'
-							form='event-form'
-							disabled={isDisabled}
-						>
-							{loading && <Loader2 className='size-4 animate-spin' />}
-							{note._id ? 'Guardar cambios' : 'Crear evento'}
-						</Button>
-					</>
+						<div className='ml-auto flex w-full flex-wrap justify-end gap-2 sm:w-auto'>
+							<Button
+								type='button'
+								variant='outline'
+								disabled={loading}
+								onClick={() => dispatch(closeModal())}
+							>
+								<X className='size-4' />
+								Cancelar
+							</Button>
+							<Button type='submit' form='event-form' disabled={isDisabled}>
+								{loading && <Loader2 className='size-4 animate-spin' />}
+								{note._id ? 'Guardar cambios' : 'Crear evento'}
+							</Button>
+						</div>
+					</div>
 				}
 			>
 				<Form {...form}>
@@ -144,7 +147,7 @@ export const CalendarModal = () => {
 													value={field.value}
 													onChange={field.onChange}
 													disabled={isDisabled}
-													placeholder='Fecha de inicio'
+													placeholder='Fecha y hora de inicio'
 												/>
 											</FormControl>
 											<FormMessage />
@@ -162,7 +165,8 @@ export const CalendarModal = () => {
 													value={field.value}
 													onChange={field.onChange}
 													disabled={isDisabled}
-													placeholder='Fecha de fin'
+													minDate={endMinDate}
+													placeholder='Fecha y hora de fin'
 												/>
 											</FormControl>
 											<FormMessage />

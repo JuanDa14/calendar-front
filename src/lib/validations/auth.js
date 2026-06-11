@@ -1,3 +1,4 @@
+import { isBefore, startOfDay } from 'date-fns';
 import { z } from 'zod';
 
 export const loginSchema = z.object({
@@ -31,6 +32,8 @@ export const resetPasswordSchema = z
 		path: ['password2'],
 	});
 
+const todayStart = () => startOfDay(new Date());
+
 export const eventSchema = z
 	.object({
 		title: z.string().min(3, 'El título debe tener al menos 3 caracteres'),
@@ -39,6 +42,10 @@ export const eventSchema = z
 		end: z.coerce.date({ invalid_type_error: 'Fecha de fin inválida' }),
 	})
 	.refine((data) => data.end >= data.start, {
-		message: 'La fecha de fin debe ser posterior al inicio',
+		message: 'La fecha de fin debe ser igual o posterior al inicio',
+		path: ['end'],
+	})
+	.refine((data) => !isBefore(startOfDay(data.end), todayStart()), {
+		message: 'La fecha de fin no puede ser anterior a hoy',
 		path: ['end'],
 	});
